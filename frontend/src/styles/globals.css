@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Bebas Neue', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --brand-red: #E50914;
+  --brand-red-dark: #B81D24;
+  --bg-primary: #0A0A0F;
+  --bg-surface: #141418;
+  --bg-card: #1A1A22;
+  --border: rgba(255,255,255,0.08);
+  --text-primary: #F5F5F5;
+  --text-secondary: #A0A0B0;
+  --text-muted: #606070;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: #3A3A48; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-red); }
+
+/* Selection */
+::selection {
+  background: var(--brand-red);
+  color: white;
+}
+
+/* Typography utilities */
+.font-display { font-family: var(--font-display); }
+
+/* Shimmer effect for skeletons */
+.skeleton {
+  background: linear-gradient(90deg, #1A1A22 25%, #2A2A35 50%, #1A1A22 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Movie card hover effects */
+.movie-card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+  transform-origin: center bottom;
+}
+
+.movie-card:hover {
+  transform: scale(1.05) translateY(-4px);
+  z-index: 10;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(229,9,20,0.3);
+}
+
+/* Horizontal scroll row */
+.scroll-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+.scroll-row::-webkit-scrollbar { display: none; }
+
+/* Gradient overlays */
+.gradient-left {
+  background: linear-gradient(to right, var(--bg-primary), transparent);
+}
+.gradient-right {
+  background: linear-gradient(to left, var(--bg-primary), transparent);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(20, 20, 24, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+/* Input styles */
+.input-dark {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: white;
+  transition: border-color 0.2s, background 0.2s;
+}
+.input-dark:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  background: rgba(255,255,255,0.08);
+}
+.input-dark::placeholder {
+  color: var(--text-muted);
+}
+
+/* Button styles */
+.btn-primary {
+  background: var(--brand-red);
+  color: white;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover {
+  background: var(--brand-red-dark);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-weight: 600;
+  transition: background 0.2s;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* Badge styles */
+.badge-quality {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+.line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+
+/* Page transitions */
+.page-enter {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* Video player */
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+}

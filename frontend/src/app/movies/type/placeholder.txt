@@ -1,0 +1,1 @@
+mkdir -p /home/claude/movie-app/frontend/src/app/movies/type/\[type\]
