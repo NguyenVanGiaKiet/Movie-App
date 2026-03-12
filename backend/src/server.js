@@ -12,7 +12,7 @@ connectDB();
 app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 500 }));
 
 // Middleware
-app.use(cors({ origin: process.env.FRONTEND_URL || 'https://movie-f3fpw28uq-nguyenvangiakiets-projects.vercel.app', credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
