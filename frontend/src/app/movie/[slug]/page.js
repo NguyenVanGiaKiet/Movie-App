@@ -361,6 +361,7 @@ export default function MovieDetailPage() {
                 className="relative rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/10 cursor-pointer group"
                 style={{ aspectRatio: '16/9' }}
                 onClick={handleWatchNow}>
+                {bg && <Image src={bg} alt="" fill className="object-cover opacity-40 group-hover:opacity-55 transition-opacity" />}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                   <div className="w-20 h-20 rounded-full bg-brand-red flex items-center justify-center shadow-2xl shadow-brand-red/50 group-hover:scale-110 transition-transform">
                     <Play className="w-8 h-8 fill-white ml-1" />
