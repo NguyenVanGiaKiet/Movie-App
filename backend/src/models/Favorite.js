@@ -12,16 +12,8 @@ const favoriteSchema = new mongoose.Schema(
       required: true,
     },
     movieData: {
-      name: String,
-      origin_name: String,
-      thumb_url: String,
-      poster_url: String,
-      year: Number,
-      episode_current: String,
-      quality: String,
-      lang: String,
-      category: [{ name: String }],
-      type: String,
+      type: Object,
+      default: {},
     },
   },
   { timestamps: true }

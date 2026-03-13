@@ -89,10 +89,12 @@ export default function MovieDetailPage() {
     setFavLoading(true);
     try {
       if (isFavorite) {
+        console.log('Removing favorite:', slug);
         await favoriteAPI.removeFavorite(slug);
         setIsFavorite(false);
         toast.success('Đã xóa khỏi yêu thích');
       } else {
+        console.log('Adding favorite:', slug, movie?.name);
         await favoriteAPI.addFavorite({
           movieSlug: slug,
           movieData: {
@@ -106,7 +108,10 @@ export default function MovieDetailPage() {
         setIsFavorite(true);
         toast.success('Đã thêm vào yêu thích ❤️');
       }
-    } catch (err) { toast.error(err.message); }
+    } catch (err) {
+      console.error('Favorite error:', err);
+      toast.error(err.message || 'Có lỗi xảy ra');
+    }
     finally { setFavLoading(false); }
   };
 
