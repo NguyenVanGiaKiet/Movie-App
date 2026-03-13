@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { movieAPI, favoriteAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server } from 'lucide-react';
+import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 function toArray(val) {
@@ -37,6 +37,7 @@ export default function MovieDetailPage() {
   const [activeServer, setActiveServer] = useState(0);
   const [playerSrc,    setPlayerSrc]    = useState('');
   const [showPlayer,   setShowPlayer]   = useState(false);
+  const [showTrailer,  setShowTrailer]  = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
   useEffect(() => {
@@ -261,6 +262,12 @@ export default function MovieDetailPage() {
                   <Play className="w-5 h-5 fill-white" /> Xem phim ngay
                 </button>
               )}
+              {movie.trailer_url && (
+                <button onClick={() => setShowTrailer(true)}
+                  className="btn-secondary flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold hover:bg-white/20 transition-all">
+                  <Play className="w-4 h-4" /> Trailer
+                </button>
+              )}
               <button onClick={toggleFavorite} disabled={favLoading}
                 className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold transition-all ${
                   isFavorite ? 'bg-brand-red text-white' : 'btn-secondary'
@@ -386,6 +393,34 @@ export default function MovieDetailPage() {
 
         <div className="h-16" />
       </div>
+
+      {/* ── Trailer modal ─────────────────────────────────────── */}
+      {showTrailer && movie.trailer_url && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
+          onClick={() => setShowTrailer(false)}>
+          <div className="relative w-full max-w-4xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-white font-semibold text-sm">
+                🎬 Trailer — <span className="text-gray-300">{movie.name}</span>
+              </p>
+              <button onClick={() => setShowTrailer(false)}
+                className="p-1.5 rounded-full glass hover:bg-white/20 transition-colors text-gray-300 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="rounded-2xl overflow-hidden bg-black ring-1 ring-white/10 shadow-2xl"
+              style={{ aspectRatio: '16/9', position: 'relative' }}>
+              <iframe
+                src={movie.trailer_url}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+                allowFullScreen
+                allow="autoplay; encrypted-media"
+                title={`Trailer — ${movie.name}`}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
