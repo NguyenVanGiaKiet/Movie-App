@@ -6,8 +6,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { movieAPI, favoriteAPI } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X } from 'lucide-react';
+import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Comments from '@/components/Comments';
 
 function toArray(val) {
   if (!val) return [];
@@ -56,14 +57,15 @@ export default function MovieDetailPage() {
         setEpisodes(eps);
 
         if (movieData?.video_url) {
-          // Phim lẻ có video_url → dùng trực tiếp, tự động hiện player
+          // Phim lẻ có video_url → chỉ set src, không hiện player
           setPlayerSrc(movieData.video_url);
-          setShowPlayer(true);
+          setShowPlayer(false); // chỉ hiện khi click
         } else {
           const firstEp = eps[0]?.server_data?.[0];
           if (firstEp) {
             setSelectedEp(firstEp);
             setPlayerSrc(firstEp.link_embed || firstEp.link_m3u8 || '');
+            setShowPlayer(false); // chỉ hiện khi click
           }
         }
       } catch (err) {
@@ -187,16 +189,6 @@ export default function MovieDetailPage() {
 
           {/* Info */}
           <div className="flex-1 pt-2">
-            {categories.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {categories.map((c, i) => (
-                  <span key={i} className="text-xs px-2.5 py-1 rounded-full glass text-gray-300 border border-white/10">
-                    {getName(c)}
-                  </span>
-                ))}
-              </div>
-            )}
-
             <h1 className="font-display text-4xl sm:text-5xl text-white tracking-wide leading-none mb-1">
               {(movie.name || '').toUpperCase()}
             </h1>
@@ -205,35 +197,51 @@ export default function MovieDetailPage() {
             )}
 
             {/* Meta */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 text-sm">
-              {movie.year && (
-                <div className="flex items-center gap-2 text-gray-300">
-                  <Calendar className="w-4 h-4 text-brand-red flex-shrink-0" />
-                  <span>{movie.year}</span>
-                </div>
-              )}
-              {movie.quality && (
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-brand-red rounded text-white text-xs font-bold">{movie.quality}</span>
-                  {movie.lang && <span className="text-gray-400">{movie.lang}</span>}
-                </div>
-              )}
-              {movie.time && (
-                <div className="flex items-center gap-2 text-gray-300">
-                  <Clock className="w-4 h-4 text-brand-red flex-shrink-0" />
-                  <span>{movie.time}</span>
-                </div>
-              )}
-              {movie.episode_current && (
-                <div className="flex items-center gap-2 text-gray-300">
-                  <Film className="w-4 h-4 text-brand-red flex-shrink-0" />
-                  <span>{movie.episode_current}</span>
-                </div>
-              )}
-              {countries.length > 0 && (
-                <div className="flex items-center gap-2 text-gray-300">
-                  <Globe className="w-4 h-4 text-brand-red flex-shrink-0" />
-                  <span>{countries.map(getName).join(', ')}</span>
+            <div className="flex flex-col gap-2 mb-5 text-sm">
+              {/* Row 1: Year · Quality · Lang · Time */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                {movie.year && (
+                  <div className="flex items-center gap-1.5 text-gray-300">
+                    <Calendar className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
+                    <span>{movie.year}</span>
+                  </div>
+                )}
+                {movie.quality && (
+                  <span className="px-2 py-0.5 bg-brand-red rounded text-white text-xs font-bold tracking-wide">{movie.quality}</span>
+                )}
+                {movie.lang && (
+                  <span className="text-gray-300">{movie.lang}</span>
+                )}
+                {movie.time && (
+                  <div className="flex items-center gap-1.5 text-gray-300">
+                    <Clock className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
+                    <span>{movie.time}</span>
+                  </div>
+                )}
+              </div>
+              {/* Row 2: Episodes · Country */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+                {movie.episode_current && (
+                  <div className="flex items-center gap-1.5 text-gray-300">
+                    <Film className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
+                    <span>{movie.episode_current}</span>
+                  </div>
+                )}
+                {countries.length > 0 && (
+                  <div className="flex items-center gap-1.5 text-gray-300">
+                    <Globe className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
+                    <span>{countries.map(getName).join(', ')}</span>
+                  </div>
+                )}
+              </div>
+              {/* Row 3: Categories */}
+              {categories.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {categories.map((cat, i) => (
+                    <span key={i} className="text-xs px-2.5 py-0.5 rounded-sm border border-white/15 text-gray-400 bg-white/5 hover:border-brand-red/40 hover:text-white transition-colors">
+                      {getName(cat)}
+                    </span>
+                  ))}
                 </div>
               )}
             </div>
@@ -393,7 +401,10 @@ export default function MovieDetailPage() {
 
         <div className="h-16" />
       </div>
-
+      {/* ── Comments ─────────────────────────────────────── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-16">
+        <Comments slug={slug} />
+      </div>
       {/* ── Trailer modal ─────────────────────────────────────── */}
       {showTrailer && movie.trailer_url && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"

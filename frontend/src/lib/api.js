@@ -87,3 +87,11 @@ export const adminAPI = {
   createCountry:   (data) => api.post('/admin/countries', data),
   deleteCountry:   (id)   => api.delete(`/admin/countries/${id}`),
 };
+// ─── Comments ──────────────────────────────────────────────────
+export const commentAPI = {
+  getComments:  (slug, page = 1)        => api.get(`/comments/${slug}?page=${page}&limit=20`),
+  createComment:(slug, content, parentId) => api.post(`/comments/${slug}`, { content, parentId }),
+  deleteComment:(id)                     => api.delete(`/comments/${id}`),
+  toggleLike:    (id)                     => api.put(`/comments/${id}/like`),
+  getReplies:    (id)                     => api.get(`/comments/${id}/replies`),
+};

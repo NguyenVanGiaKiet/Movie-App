@@ -10,16 +10,16 @@ import Link from 'next/link';
 // Map URL slug → API call + label
 const TYPE_CONFIG = {
   // Danh sách → /api/films/danh-sach/:slug
-  'phim-le':         { fn: (p) => movieAPI.getByDanhSach('phim-le', p),        label: '🎬 Phim Lẻ' },
-  'phim-bo':         { fn: (p) => movieAPI.getByDanhSach('phim-bo', p),        label: '📺 Phim Bộ' },
-  'tv-shows':        { fn: (p) => movieAPI.getByDanhSach('tv-shows', p),       label: '📡 TV Shows' },
-  'phim-dang-chieu': { fn: (p) => movieAPI.getByDanhSach('phim-dang-chieu', p), label: '🎥 Phim Đang Chiếu' },
+  'phim-le':         { fn: (p) => movieAPI.getByDanhSach('phim-le', p),        label: 'Phim Lẻ' },
+  'phim-bo':         { fn: (p) => movieAPI.getByDanhSach('phim-bo', p),        label: 'Phim Bộ' },
+  'tv-shows':        { fn: (p) => movieAPI.getByDanhSach('tv-shows', p),       label: 'TV Shows' },
+  'phim-dang-chieu': { fn: (p) => movieAPI.getByDanhSach('phim-dang-chieu', p), label: 'Phim Đang Chiếu' },
   // Thể loại → /api/films/the-loai/:slug
-  'hoat-hinh':       { fn: (p) => movieAPI.getByTheLoai('hoat-hinh', p),       label: '✨ Hoạt Hình' },
-  'hanh-dong':       { fn: (p) => movieAPI.getByTheLoai('hanh-dong', p),       label: '💥 Hành Động' },
-  'kinh-di':         { fn: (p) => movieAPI.getByTheLoai('kinh-di', p),         label: '👻 Kinh Dị' },
-  'tinh-cam':        { fn: (p) => movieAPI.getByTheLoai('tinh-cam', p),        label: '💕 Tình Cảm' },
-  'vien-tuong':      { fn: (p) => movieAPI.getByTheLoai('khoa-hoc-vien-tuong', p), label: '🚀 Viễn Tưởng' },
+  'hoat-hinh':       { fn: (p) => movieAPI.getByTheLoai('hoat-hinh', p),       label: 'Hoạt Hình' },
+  'hanh-dong':       { fn: (p) => movieAPI.getByTheLoai('hanh-dong', p),       label: 'Hành Động' },
+  'kinh-di':         { fn: (p) => movieAPI.getByTheLoai('kinh-di', p),         label: 'Kinh Dị' },
+  'tinh-cam':        { fn: (p) => movieAPI.getByTheLoai('tinh-cam', p),        label: 'Tình Cảm' },
+  'vien-tuong':      { fn: (p) => movieAPI.getByTheLoai('khoa-hoc-vien-tuong', p), label: 'Viễn Tưởng' },
 };
 
 function extractItems(res) {

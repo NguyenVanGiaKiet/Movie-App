@@ -1,121 +1,246 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Info, Star, Calendar } from 'lucide-react';
+import { Play, Info, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const INTERVAL = 7000;
 
 export default function Hero({ movies = [] }) {
-  const [current, setCurrent] = useState(0);
-  const featured = movies.slice(0, 5);
+  const featured = movies.slice(0, 6);
+  const total    = featured.length;
 
+  const [current,  setCurrent]  = useState(0);
+  const [prev,     setPrev]     = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [dragging, setDragging] = useState(false);
+
+  // Use ref to always have fresh index in timer callbacks
+  const currentRef   = useRef(0);
+  const transitingRef = useRef(false);
+  const timerRef     = useRef(null);
+  const progRef      = useRef(null);
+  const dragStart    = useRef(null);
+
+  const goTo = (idx) => {
+    if (idx === currentRef.current) return;
+    // Allow even if transitioning (timer wins over animation)
+    transitingRef.current = true;
+    setPrev(currentRef.current);
+    currentRef.current = idx;
+    setCurrent(idx);
+    setProgress(0);
+    setTimeout(() => { transitingRef.current = false; }, 700);
+  };
+
+  const startTimer = () => {
+    clearInterval(progRef.current);
+    clearTimeout(timerRef.current);
+
+    if (total <= 1) return;
+
+    const startTime = Date.now();
+    setProgress(0);
+
+    progRef.current = setInterval(() => {
+      const pct = Math.min(((Date.now() - startTime) / INTERVAL) * 100, 100);
+      setProgress(pct);
+    }, 50);
+
+    timerRef.current = setTimeout(() => {
+      // Always use ref for fresh value
+      const next = (currentRef.current + 1) % total;
+      goTo(next);
+    }, INTERVAL);
+  };
+
+  // Start timer when current changes
   useEffect(() => {
-    if (featured.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % featured.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [featured.length]);
+    startTimer();
+    return () => {
+      clearInterval(progRef.current);
+      clearTimeout(timerRef.current);
+    };
+  }, [current, total]); // eslint-disable-line
 
-  if (!featured.length) return <div className="h-[70vh] skeleton" />;
+  // Remove prev after animation
+  useEffect(() => {
+    if (prev === null) return;
+    const t = setTimeout(() => setPrev(null), 750);
+    return () => clearTimeout(t);
+  }, [current]);
 
-  const movie = featured[current];
+  // Keyboard
+  useEffect(() => {
+    const fn = (e) => {
+      if (e.key === 'ArrowLeft')  { goTo((currentRef.current - 1 + total) % total); }
+      if (e.key === 'ArrowRight') { goTo((currentRef.current + 1) % total); }
+    };
+    window.addEventListener('keydown', fn);
+    return () => window.removeEventListener('keydown', fn);
+  }, [total]);
+
+  // Drag / swipe
+  const onDragStart = (e) => {
+    dragStart.current = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    setDragging(true);
+  };
+  const onDragEnd = (e) => {
+    if (dragStart.current === null) return;
+    setDragging(false);
+    const end  = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+    const diff = dragStart.current - end;
+    if (Math.abs(diff) > 50) {
+      diff > 0
+        ? goTo((currentRef.current + 1) % total)
+        : goTo((currentRef.current - 1 + total) % total);
+    }
+    dragStart.current = null;
+  };
+
+  if (!total) return <div className="hero-root skeleton" />;
+
+  const movie     = featured[current];
+  const prevMovie = prev !== null ? featured[prev] : null;
   if (!movie) return null;
 
-  const bg = movie.poster_url || movie.thumb_url || '';
-  const name = movie.name || 'Không có tên';
-  const originName = movie.origin_name || '';
-  const desc = movie.content || movie.description || '';
-  const year = movie.year || '';
-  const quality = movie.quality || '';
-  const categories = (movie.category || []).slice(0, 3);
+  const bg   = movie.poster_url || movie.thumb_url || '';
+  const cats = (movie.category || []).slice(0, 3);
+  const desc = (movie.content || movie.description || '').replace(/<[^>]*>/g, '').trim();
 
   return (
-    <div className="relative h-[70vh] min-h-[500px] overflow-hidden">
-      {/* Background image */}
-      {bg && (
-        <Image
-          key={current}
-          src={bg}
-          alt={name}
-          fill
-          className="object-cover animate-fade-in"
-          priority
-          quality={85}
-        />
+    <div
+      className="hero-root"
+      style={{ cursor: dragging ? 'grabbing' : 'grab' }}
+      onMouseDown={onDragStart}
+      onMouseUp={onDragEnd}
+      onMouseLeave={() => { setDragging(false); dragStart.current = null; }}
+      onTouchStart={onDragStart}
+      onTouchEnd={onDragEnd}
+    >
+      {/* ── Prev bg (fading out) ── */}
+      {prevMovie && (
+        <div key={`prev-${prev}`} style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
+          <Image
+            src={prevMovie.poster_url || prevMovie.thumb_url || ''}
+            alt="" fill
+            className="object-cover"
+            style={{ objectFit: 'cover' }}
+            priority
+            unoptimized
+          />
+          <div className="hero-abs hero-grad-r" />
+          <div className="hero-abs hero-grad-b" />
+        </div>
       )}
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0F] via-[#0A0A0F]/70 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-black/30" />
+      {/* ── Current bg (fading in) ── */}
+      <div key={`curr-${current}`} className="hero-bg-curr" style={{ zIndex: 2 }}>
+        {bg && (
+          <Image
+            src={bg}
+            alt={movie.name || ''}
+            fill
+            className="object-cover"
+            style={{ objectFit: 'cover' }}
+            priority
+            unoptimized
+          />
+        )}
+        <div className="hero-abs hero-grad-r" />
+        <div className="hero-abs hero-grad-b" />
+      </div>
 
-      {/* Content */}
-      <div className="absolute inset-0 flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-xl animate-slide-up" key={current}>
-            {/* Categories */}
-            {categories.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {categories.map((c, i) => (
-                  <span key={i} className="text-xs px-2.5 py-1 rounded-full glass text-gray-300 border border-white/10">
-                    {c.name}
-                  </span>
-                ))}
-              </div>
+      {/* ── Content ── */}
+      <div className="hero-abs" style={{ zIndex: 10, display: 'flex', alignItems: 'flex-end', paddingBottom: '7rem' }}>
+        <div className="hero-content-wrap">
+          <div className="hero-content-in" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
+
+            <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
+
+            {movie.origin_name && (
+              <p className="hero-origin">{movie.origin_name}</p>
             )}
 
-            {/* Title */}
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-white leading-none tracking-wide mb-2">
-              {name.toUpperCase()}
-            </h1>
-            {originName && originName !== name && (
-              <p className="text-gray-400 text-lg mb-3">{originName}</p>
-            )}
-
-            {/* Meta */}
-            <div className="flex items-center gap-4 mb-4 text-sm text-gray-300">
-              {year && (
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" /> {year}
-                </span>
-              )}
-              {quality && (
-                <span className="px-2 py-0.5 bg-brand-red rounded text-white text-xs font-bold">
-                  {quality}
-                </span>
-              )}
+            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
+              {movie.year            && <span className="hero-pill">{movie.year}</span>}
+              {movie.quality         && <span className="hero-qlty">{movie.quality}</span>}
+              {movie.lang            && <span className="hero-pill">{movie.lang}</span>}
+              {movie.episode_current && <span className="hero-pill">{movie.episode_current}</span>}
+              {movie.time            && <span className="hero-pill">{movie.time}</span>}
+              {cats.map((c, i) => <span key={i} className="hero-tag">{c.name || c}</span>)}
             </div>
 
-            {/* Description */}
-            {desc && (
-              <p className="text-gray-300 text-sm leading-relaxed line-clamp-3 mb-6 max-w-md">
-                {desc.replace(/<[^>]*>/g, '')}
-              </p>
-            )}
+            {desc && <p className="hero-desc">{desc}</p>}
 
-            {/* CTA Buttons */}
-            <div className="flex items-center gap-3">
-              <Link href={`/movie/${movie.slug}`} className="btn-primary flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold">
-                <Play className="w-4 h-4 fill-white" /> Xem ngay
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 24 }}>
+              <Link href={`/movie/${movie.slug}`} className="hero-cta-play">
+                <Play style={{ width: 18, height: 18, fill: 'white' }} /> Xem ngay
               </Link>
-              <Link href={`/movie/${movie.slug}`} className="btn-secondary flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold">
-                <Info className="w-4 h-4" /> Chi tiết
+              <Link href={`/movie/${movie.slug}`} className="hero-cta-info">
+                <Info style={{ width: 16, height: 16 }} /> Chi tiết
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Pagination dots */}
-      {featured.length > 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* ── Thumbnail strip (desktop) ── */}
+      {total > 1 && (
+        <div className="hero-strip">
+          <div className="hero-nav-col">
+            <button
+              onClick={() => goTo((currentRef.current - 1 + total) % total)}
+              className="hero-nav-btn"
+            >
+              <ChevronLeft style={{ width: 16, height: 16 }} />
+            </button>
+            <button
+              onClick={() => goTo((currentRef.current + 1) % total)}
+              className="hero-nav-btn"
+            >
+              <ChevronRight style={{ width: 16, height: 16 }} />
+            </button>
+          </div>
+
+          <div className="hero-thumbs">
+            {featured.map((m, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className={`hero-thumb${i === current ? ' active' : ''}`}
+              >
+                <div className="hero-thumb-img">
+                  {(m.thumb_url || m.poster_url) && (
+                    <Image
+                      src={m.thumb_url || m.poster_url}
+                      alt={m.name || ''}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      unoptimized
+                    />
+                  )}
+                  {i === current && (
+                    <div className="hero-thumb-bar" style={{ width: `${progress}%` }} />
+                  )}
+                  <div className="hero-thumb-dim" />
+                </div>
+                <p className="hero-thumb-name">{m.name}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Dots (mobile) ── */}
+      {total > 1 && (
+        <div className="hero-dots">
           {featured.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrent(i)}
-              className={`h-1 rounded-full transition-all duration-300 ${
-                i === current ? 'w-8 bg-brand-red' : 'w-2 bg-white/40'
-              }`}
+              onClick={() => goTo(i)}
+              className={`hero-dot${i === current ? ' active' : ''}`}
             />
           ))}
         </div>

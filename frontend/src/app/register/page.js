@@ -116,18 +116,15 @@ export default function RegisterPage() {
               <div className="relative">
                 <input
                   key="password"
-                  type={showPass ? 'text' : 'password'}
+                  type="password"
                   name="password"
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Ít nhất 6 ký tự"
                   required
-                  className={`input-dark w-full pl-10 pr-10 py-3 rounded-xl ${errors.password ? 'border-red-500/60' : ''}`}
+                  className={`input-dark w-full pl-10 pr-4 py-3 rounded-xl ${errors.password ? 'border-red-500/60' : ''}`}
                 />
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white">
-                  {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
               </div>
               {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
             </div>
@@ -136,7 +133,7 @@ export default function RegisterPage() {
               <div className="relative">
                 <input
                   key="confirm"
-                  type={showPass ? 'text' : 'password'}
+                  type="password"
                   name="confirm"
                   value={form.confirm}
                   onChange={handleChange}

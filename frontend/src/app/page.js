@@ -46,10 +46,10 @@ export default function HomePage() {
     <div className="page-enter">
       <Hero movies={newMovies.slice(0, 5)} />
       <div className="pt-8">
-        <MovieRow title="🔥 Phim Mới Cập Nhật" movies={newMovies} loading={loading} />
-        <MovieRow title="🎬 Phim Lẻ"           movies={phimLe}    loading={loading} />
-        <MovieRow title="📺 Phim Bộ"           movies={phimBo}    loading={loading} />
-        <MovieRow title="✨ Hoạt Hình"         movies={hoatHinh}  loading={loading} />
+        <MovieRow title="Phim Mới Cập Nhật" movies={newMovies} loading={loading} />
+        <MovieRow title="Phim Lẻ"           movies={phimLe}    loading={loading} />
+        <MovieRow title="Phim Bộ"           movies={phimBo}    loading={loading} />
+        <MovieRow title="Hoạt Hình"         movies={hoatHinh}  loading={loading} />
       </div>
     </div>
   );

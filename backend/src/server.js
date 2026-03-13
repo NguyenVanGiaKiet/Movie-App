@@ -8,8 +8,8 @@ const connectDB  = require('./config/db');
 const app = express();
 connectDB();
 
-// Rate limiting
-app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 500 }));
+// Rate limiting - disabled for development
+// app.use('/api', rateLimit({ windowMs: 15*60*1000, max: 500 }));
 
 // Middleware
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
@@ -28,6 +28,8 @@ app.use('/api/auth',      require('./routes/auth'));
 app.use('/api/favorites', require('./routes/favorites'));
 // Admin panel
 app.use('/api/admin',     require('./routes/admin'));
+// Comments
+app.use('/api/comments', require('./routes/comments'));
 
 // Health check
 app.get('/api/health', (req, res) => {
