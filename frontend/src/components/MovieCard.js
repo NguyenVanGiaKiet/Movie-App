@@ -6,11 +6,11 @@ import { useState } from 'react';
 import { Play } from 'lucide-react';
 
 const QUALITY_STYLE = {
-  FHD:  { bg: '#1a56db' },
-  '4K': { bg: '#7e3af2' },
-  HD:   { bg: '#057a55' },
-  CAM:  { bg: '#c27803' },
-  SD:   { bg: '#374151' },
+  FHD:  { bg: '#E50914' },
+  '4K': { bg: '#E50914' },
+  HD:   { bg: '#E50914' },
+  CAM:  { bg: '#E50914' },
+  SD:   { bg: '#E50914' },
 };
 
 function getQuality(q = '') {
