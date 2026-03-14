@@ -119,13 +119,13 @@ export default function Navbar() {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       scrolled ? 'glass shadow-2xl' : 'bg-gradient-to-b from-black/90 to-transparent'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="nav-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
             <Film className="w-7 h-7 text-brand-red" />
-            <span className="font-display text-2xl tracking-widest text-white group-hover:text-brand-red transition-colors">
+            <span className="nav-logo-text font-display text-2xl tracking-widest text-white group-hover:text-brand-red transition-colors">
               CINESTREAM
             </span>
           </Link>

@@ -404,9 +404,8 @@ body {
 .mr-title {
   font-family: var(--font-display, "Bebas Neue", sans-serif);
   font-size: clamp(1.3rem, 2.5vw, 1.7rem); font-weight: 400;
-  color: #fff; letter-spacing: .025em; text-transform: uppercase;
+  color: #fff; letter-spacing: .12em; text-transform: uppercase;
   display: flex; align-items: center; gap: 12px;
-  line-height: .95; text-shadow: 0 4px 40px rgba(0,0,0,.6);
 }
 .mr-title-bar { width: 3px; height: 1em; border-radius: 1px; background: #E50914; flex-shrink: 0; }
 .mr-nav { display: flex; gap: 6px; }
@@ -430,10 +429,8 @@ body {
 .mr-fade-right { right: 0; background: linear-gradient(to left,  #0A0A0F, transparent); }
 .mr-track {
   display: flex; gap: 12px;
-  overflow-x: auto; overflow-y: visible;
-  padding: 4px 2rem;
+  overflow-x: auto; overflow-y: clip;
+  padding: 4px 2rem 20px;
   scrollbar-width: none; -ms-overflow-style: none;
-  scroll-snap-type: x proximity;
 }
 .mr-track::-webkit-scrollbar { display: none; }
-.mr-track > * { scroll-snap-align: start; }
