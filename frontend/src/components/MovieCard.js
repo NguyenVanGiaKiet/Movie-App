@@ -78,7 +78,7 @@ export default function MovieCard({ movie, className = '' }) {
 
       <div className="mc-info">
         <p className="mc-name">{name}</p>
-        {origin && origin !== name && <p className="mc-origin">{origin}</p>}
+        {origin && <p className="mc-origin">{origin}</p>}
         <div className="mc-meta">
           {year && <span className="mc-year">{year}</span>}
           {movie.lang && <span className="mc-lang">{movie.lang}</span>}

@@ -157,15 +157,9 @@ export default function Hero({ movies = [] }) {
         <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', padding: '0 2rem' }}>
           <div className="hero-content-in" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
 
-            {cats.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
-                {cats.map((c, i) => <span key={i} className="hero-tag">{c.name || c}</span>)}
-              </div>
-            )}
-
             <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
 
-            {movie.origin_name && movie.origin_name !== movie.name && (
+            {movie.origin_name && (
               <p className="hero-origin">{movie.origin_name}</p>
             )}
 
@@ -175,7 +169,7 @@ export default function Hero({ movies = [] }) {
               {movie.lang            && <span className="hero-pill">{movie.lang}</span>}
               {movie.episode_current && <span className="hero-pill">{movie.episode_current}</span>}
               {movie.time            && <span className="hero-pill">{movie.time}</span>}
-              {cats.map((c, i) => <span key={i} className="hero-tag">{c.name || c}</span>)}
+
             </div>
 
             {desc && <p className="hero-desc">{desc}</p>}

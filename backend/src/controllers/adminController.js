@@ -71,7 +71,7 @@ exports.createMovie = async (req, res) => {
   try {
     const {
       name, origin_name, content, type, status,
-      thumb_url, poster_url, trailer_url, video_url,
+      thumb_url, poster_url, trailer_url, link_embed,
       time, episode_current, episode_total,
       quality, lang, year,
       categoryNames = [], countryNames = [],
@@ -91,7 +91,7 @@ exports.createMovie = async (req, res) => {
 
     const movie = await Movie.create({
       name, origin_name, slug, content, type, status,
-      thumb_url, poster_url, trailer_url, video_url,
+      thumb_url, poster_url, trailer_url, link_embed,
       time, episode_current, episode_total,
       quality, lang, year: parseInt(year) || new Date().getFullYear(),
       category, country,
@@ -112,7 +112,7 @@ exports.updateMovie = async (req, res) => {
   try {
     const {
       name, origin_name, slug: newSlug, content, type, status,
-      thumb_url, poster_url, trailer_url, video_url,
+      thumb_url, poster_url, trailer_url, link_embed,
       time, episode_current, episode_total,
       quality, lang, year,
       categoryNames, countryNames,
@@ -131,7 +131,7 @@ exports.updateMovie = async (req, res) => {
     if (thumb_url !== undefined)   movie.thumb_url   = thumb_url;
     if (poster_url !== undefined)  movie.poster_url  = poster_url;
     if (trailer_url !== undefined) movie.trailer_url = trailer_url;
-    if (video_url !== undefined)   movie.video_url   = video_url;
+    if (link_embed !== undefined)  movie.link_embed  = link_embed;
     if (time !== undefined)        movie.time        = time;
     if (episode_current !== undefined) movie.episode_current = episode_current;
     if (episode_total !== undefined)   movie.episode_total   = episode_total;

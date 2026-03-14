@@ -200,12 +200,6 @@ body {
 .hero-grad-r { position: absolute; inset: 0; background: linear-gradient(105deg, #0A0A0F 28%, rgba(10,10,15,.55) 55%, transparent 85%); }
 .hero-grad-b { position: absolute; inset: 0; background: linear-gradient(to top, #0A0A0F 0%, transparent 42%); }
 .hero-content-in { animation: heroUp 650ms cubic-bezier(.22,1,.36,1) 80ms both; }
-.hero-content-wrap {
-  width: 100%;
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
 @keyframes heroUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 .hero-tag {
   display: inline-flex; align-items: center;
@@ -267,10 +261,10 @@ body {
 }
 .hero-nav-btn:hover { background: rgba(255,255,255,.25); }
 .hero-thumbs { display: flex; gap: 8px; align-items: flex-end; }
-.hero-thumb { width: 88px; cursor: pointer; transition: transform .25s cubic-bezier(.25,.46,.45,.94); }
+.hero-thumb { width: 66px; cursor: pointer; transition: transform .25s cubic-bezier(.25,.46,.45,.94); }
 .hero-thumb:hover { transform: translateY(-3px); }
 .hero-thumb-img {
-  width: 88px; height: 54px; border-radius: 6px; overflow: hidden;
+  width: 66px; height: 88px; border-radius: 6px; overflow: hidden;
   position: relative; border: 2px solid transparent; transition: border-color .3s;
 }
 .hero-thumb.active .hero-thumb-img {
@@ -288,7 +282,7 @@ body {
   font-size: 10px; color: rgba(255,255,255,.55);
   margin-top: 5px; text-align: center;
   overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-  max-width: 88px; transition: color .2s;
+  max-width: 66px; transition: color .2s;
 }
 .hero-thumb.active .hero-thumb-name { color: #fff; }
 .hero-dots {
@@ -484,5 +478,107 @@ body {
 }
 /* Hide when dots are visible (mobile) */
 @media (max-width: 768px) {
-  .hero-scroll-hint { bottom: 40px; }
+  .hero-scroll-hint { bottom: 52px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* TYPOGRAPHY SYSTEM — Bebas Neue display + DM Sans body          */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* Page section headings — same accent-bar style as Navbar */
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+}
+.section-heading::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1em;
+  background: #E50914;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* Inline accent bar variant (for h2 already in DOM) */
+h2.display-heading, .display-heading {
+  font-family: var(--font-display) !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase;
+}
+
+/* Body text scale */
+.text-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+}
+
+/* Buttons — enforce DM Sans, not inherit */
+button, .btn-primary, .btn-secondary {
+  font-family: var(--font-body);
+}
+
+/* Inputs */
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+/* Nav links already use DM Sans body — keep tracking tighter */
+nav a {
+  letter-spacing: .01em;
+}
+
+/* Footer logo already uses Bebas — tighten year text */
+footer .text-sm {
+  font-family: var(--font-body);
+  letter-spacing: .02em;
+}
+
+/* Movie detail title — enforce display font */
+.detail-title {
+  font-family: var(--font-display) !important;
+  letter-spacing: .05em;
+  line-height: .95;
+}
+
+/* Player section heading */
+.player-heading {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.player-heading::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1em;
+  background: #E50914;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* Comment heading already uses display font via inline style — keep */
+
+/* Admin panel headings */
+.admin-page-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
 }

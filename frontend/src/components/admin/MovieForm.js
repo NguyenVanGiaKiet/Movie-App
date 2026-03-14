@@ -50,6 +50,7 @@ export default function MovieForm({ initialData, onSubmit, submitLabel = 'Lưu' 
     thumb_url:       '',
     poster_url:      '',
     trailer_url:     '',
+    link_embed:      '',
     time:            '',
     episode_current: 'Full',
     episode_total:   '',
@@ -81,6 +82,7 @@ export default function MovieForm({ initialData, onSubmit, submitLabel = 'Lưu' 
       thumb_url:       initialData.thumb_url || '',
       poster_url:      initialData.poster_url || '',
       trailer_url:     initialData.trailer_url || '',
+      link_embed:      initialData.link_embed || '',
       time:            initialData.time || '',
       episode_current: initialData.episode_current || 'Full',
       episode_total:   initialData.episode_total || '',
@@ -169,7 +171,19 @@ export default function MovieForm({ initialData, onSubmit, submitLabel = 'Lưu' 
       <Section title="Hình ảnh & Trailer">
         <Input label="Thumbnail URL" value={form.thumb_url} onChange={set('thumb_url')} placeholder="https://..." />
         <Input label="Poster URL" value={form.poster_url} onChange={set('poster_url')} placeholder="https://..." />
-        <Input label="Trailer URL (YouTube embed hoặc link video)" value={form.trailer_url} onChange={set('trailer_url')} placeholder="https://www.youtube.com/embed/..." />
+        <Input label="Trailer URL (YouTube embed)" value={form.trailer_url} onChange={set('trailer_url')} placeholder="https://www.youtube.com/embed/..." />
+        <div>
+          <label className="block text-xs text-gray-400 mb-1.5 font-medium">
+            🎬 Video URL — Link xem phim trực tiếp (embed)
+          </label>
+          <input
+            value={form.link_embed}
+            onChange={set('link_embed')}
+            placeholder="VD: https://embed14.streamc.xyz/embed.php?hash=abc123"
+            className="input-dark w-full px-3 py-2.5 rounded-xl text-sm"
+          />
+          <p className="text-xs text-gray-600 mt-1">Dùng cho phim lẻ không cần tạo server/tập. Hỗ trợ mọi iframe embed.</p>
+        </div>
         {form.thumb_url && (
           <div className="flex gap-3 mt-2">
             <img src={form.thumb_url} alt="thumb" className="h-24 rounded-lg object-cover" onError={e => e.target.style.display='none'} />

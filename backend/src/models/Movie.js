@@ -42,7 +42,7 @@ const movieSchema = new mongoose.Schema({
 
   // Link phim trực tiếp (dùng cho phim lẻ, không cần tạo server/tập)
   // VD: https://embed14.streamc.xyz/embed.php?hash=abc123
-  video_url:    { type: String, default: '' },
+  link_embed:   { type: String, default: '' },      // direct embed URL for phim-le
 
   // Thông tin phim
   time:             { type: String, default: '' },         // "120 phút", "45 phút/tập"

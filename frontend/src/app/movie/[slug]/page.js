@@ -56,16 +56,16 @@ export default function MovieDetailPage() {
         const eps = toArray(res?.data?.episodes || movieData?.episodes);
         setEpisodes(eps);
 
-        if (movieData?.video_url) {
-          // Phim lẻ có video_url → chỉ set src, không hiện player
-          setPlayerSrc(movieData.video_url);
-          setShowPlayer(false); // chỉ hiện khi click
+        if (movieData?.link_embed) {
+          // Phim lẻ có link_embed → dùng trực tiếp, tự động hiện player
+          setPlayerSrc(movieData.link_embed);
+          setShowPlayer(true);
         } else {
           const firstEp = eps[0]?.server_data?.[0];
           if (firstEp) {
             setSelectedEp(firstEp);
             setPlayerSrc(firstEp.link_embed || firstEp.link_m3u8 || '');
-            setShowPlayer(false); // chỉ hiện khi click
+            setShowPlayer(true); // vào thẳng player, không hiện màn hình chờ
           }
         }
       } catch (err) {
@@ -89,12 +89,10 @@ export default function MovieDetailPage() {
     setFavLoading(true);
     try {
       if (isFavorite) {
-        console.log('Removing favorite:', slug);
         await favoriteAPI.removeFavorite(slug);
         setIsFavorite(false);
         toast.success('Đã xóa khỏi yêu thích');
       } else {
-        console.log('Adding favorite:', slug, movie?.name);
         await favoriteAPI.addFavorite({
           movieSlug: slug,
           movieData: {
@@ -108,10 +106,7 @@ export default function MovieDetailPage() {
         setIsFavorite(true);
         toast.success('Đã thêm vào yêu thích ❤️');
       }
-    } catch (err) {
-      console.error('Favorite error:', err);
-      toast.error(err.message || 'Có lỗi xảy ra');
-    }
+    } catch (err) { toast.error(err.message); }
     finally { setFavLoading(false); }
   };
 
@@ -162,25 +157,25 @@ export default function MovieDetailPage() {
   const directors  = toArray(movie.director);
   const actors     = toArray(movie.actor);
   const desc       = (movie.content || movie.description || '').replace(/<[^>]*>/g, '').trim();
-  const hasVideo   = !!(movie.video_url || playerSrc);
-  const hasEpisodes = episodes.length > 0 && !movie.video_url;
+  const hasVideo   = !!(movie.link_embed || playerSrc);
+  const hasEpisodes = episodes.length > 0 && !movie.link_embed;
 
   return (
     <div className="min-h-screen page-enter">
 
       {/* ── Hero backdrop ─────────────────────────────────────── */}
-      <div className="relative h-[55vh] overflow-hidden">
+      <div className="detail-hero relative h-[55vh] overflow-hidden">
         {bg && <Image src={bg} alt={movie.name || ''} fill className="object-cover" priority quality={80} />}
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0F] via-[#0A0A0F]/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-black/20" />
       </div>
 
       {/* ── Main content ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 detail-neg-mt relative z-10">
+        <div className="flex flex-col sm:flex-row lg:flex-row gap-6 sm:gap-8">
 
           {/* Poster */}
-          <div className="flex-shrink-0 w-48 sm:w-56 mx-auto lg:mx-0">
+          <div className="detail-poster-wrap flex-shrink-0 w-48 sm:w-56 mx-auto lg:mx-0">
             <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
               {bg ? (
                 <Image src={movie.thumb_url || bg} alt={movie.name || ''} fill className="object-cover" />
@@ -193,18 +188,18 @@ export default function MovieDetailPage() {
           </div>
 
           {/* Info */}
-          <div className="flex-1 pt-2">
-            <h1 className="font-display text-4xl sm:text-5xl text-white tracking-wide leading-none mb-1">
+          <div className="flex-1 pt-2 text-center sm:text-left">
+            <h1 className="detail-title font-display text-4xl sm:text-5xl text-white tracking-wide leading-none mb-1">
               {(movie.name || '').toUpperCase()}
             </h1>
             {movie.origin_name && (
-              <p className="text-gray-400 text-lg mb-4">{movie.origin_name}</p>
+              <p className="text-gray-400 text-base sm:text-lg mb-4">{movie.origin_name}</p>
             )}
 
             {/* Meta */}
-            <div className="flex flex-col gap-2 mb-5 text-sm">
+            <div className="flex flex-col gap-2 mb-5 text-sm items-center sm:items-start">
               {/* Row 1: Year · Quality · Lang · Time */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5">
                 {movie.year && (
                   <div className="flex items-center gap-1.5 text-gray-300">
                     <Calendar className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
@@ -225,7 +220,7 @@ export default function MovieDetailPage() {
                 )}
               </div>
               {/* Row 2: Episodes · Country */}
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5">
                 {movie.episode_current && (
                   <div className="flex items-center gap-1.5 text-gray-300">
                     <Film className="w-3.5 h-3.5 text-brand-red flex-shrink-0" />
@@ -241,7 +236,7 @@ export default function MovieDetailPage() {
               </div>
               {/* Row 3: Categories */}
               {categories.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
                   {categories.map((cat, i) => (
                     <span key={i} className="text-xs px-2.5 py-0.5 rounded-sm border border-white/15 text-gray-400 bg-white/5 hover:border-brand-red/40 hover:text-white transition-colors">
                       {getName(cat)}
@@ -253,7 +248,7 @@ export default function MovieDetailPage() {
 
             {/* Description */}
             {desc && (
-              <div className="mb-6 max-w-2xl">
+              <div className="mb-6 max-w-2xl mx-auto sm:mx-0">
                 <p className={`text-gray-300 text-sm leading-relaxed ${showFullDesc ? '' : 'line-clamp-3'}`}>
                   {desc}
                 </p>
@@ -268,7 +263,7 @@ export default function MovieDetailPage() {
             )}
 
             {/* Actions */}
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="detail-actions flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-6">
               {hasVideo && (
                 <button onClick={handleWatchNow}
                   className="btn-primary flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold shadow-lg shadow-brand-red/30 hover:scale-105 transition-transform">
@@ -292,13 +287,13 @@ export default function MovieDetailPage() {
 
             {/* Cast */}
             {actors.length > 0 && (
-              <p className="text-sm text-gray-400 mb-1">
+              <p className="text-sm text-gray-400 mb-1 text-center sm:text-left">
                 <span className="text-gray-500">Diễn viên: </span>
                 {actors.slice(0, 6).map(getName).join(', ')}
               </p>
             )}
             {directors.length > 0 && (
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400 text-center sm:text-left">
                 <span className="text-gray-500">Đạo diễn: </span>
                 {directors.map(getName).join(', ')}
               </p>
@@ -312,9 +307,7 @@ export default function MovieDetailPage() {
         {(hasVideo || hasEpisodes) && (
           <div ref={playerRef} className="mt-14 scroll-mt-20">
 
-            <h2 className="font-display text-2xl text-white tracking-wide mb-5">
-              <span className="border-l-4 border-brand-red pl-3">XEM PHIM</span>
-            </h2>
+            <h2 className="player-heading">XEM PHIM</h2>
 
             {/* Server tabs */}
             {hasEpisodes && episodes.length > 1 && (
@@ -345,7 +338,7 @@ export default function MovieDetailPage() {
                   {serverData.length > 1 && (
                     <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">Danh sách tập</p>
                   )}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2" style={{maxHeight: "10rem", overflowY: "auto", paddingRight: "4px"}}>
                     {serverData.map((ep, i) => (
                       <button key={i} onClick={() => selectEpisode(ep)}
                         className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
@@ -406,10 +399,12 @@ export default function MovieDetailPage() {
 
         <div className="h-16" />
       </div>
+
       {/* ── Comments ─────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <Comments slug={slug} />
       </div>
+
       {/* ── Trailer modal ─────────────────────────────────────── */}
       {showTrailer && movie.trailer_url && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm"
