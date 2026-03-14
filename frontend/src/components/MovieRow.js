@@ -16,8 +16,16 @@ export default function MovieRow({ title, movies = [], loading = false, error = 
   const updateArrows = () => {
     const el = rowRef.current;
     if (!el) return;
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+    
+    const scrollLeft = el.scrollLeft;
+    const scrollWidth = el.scrollWidth;
+    const clientWidth = el.clientWidth;
+    
+    // Debug log để kiểm tra
+    console.log('updateArrows:', { scrollLeft, scrollWidth, clientWidth });
+    
+    setCanLeft(scrollLeft > 4);
+    setCanRight(scrollLeft < scrollWidth - clientWidth - 4);
   };
 
   // Force scroll to 0 after hydration (beat browser scroll-restoration)
@@ -32,11 +40,36 @@ export default function MovieRow({ title, movies = [], loading = false, error = 
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  // Update arrows khi movies thay đổi
+  useEffect(() => {
+    if (!loading && !error && movies.length > 0) {
+      const raf = requestAnimationFrame(() => {
+        updateArrows();
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [movies, loading, error]);
+
   const scroll = (dir) => {
     const el = rowRef.current;
     if (!el) return;
-    el.scrollBy({ left: dir === 'left' ? -el.clientWidth * 0.75 : el.clientWidth * 0.75, behavior: 'smooth' });
-    setTimeout(updateArrows, 420);
+    
+    const scrollAmount = el.clientWidth * 0.75;
+    const targetScroll = dir === 'left' 
+      ? Math.max(0, el.scrollLeft - scrollAmount)
+      : el.scrollLeft + scrollAmount;
+    
+    console.log('scroll:', { dir, currentScroll: el.scrollLeft, targetScroll, scrollAmount });
+    
+    el.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth'
+    });
+    
+    // Update arrows sau khi scroll hoàn tất
+    setTimeout(() => {
+      updateArrows();
+    }, 500);
   };
 
   /* ── Drag / mouse ── */
@@ -73,10 +106,28 @@ export default function MovieRow({ title, movies = [], loading = false, error = 
           {title}
         </h2>
         <div className="mr-nav">
-          <button onClick={() => scroll('left')} disabled={!canLeft} className="mr-nav-btn" aria-label="Cuộn trái">
+          <button 
+            onClick={() => scroll('left')} 
+            disabled={!canLeft} 
+            className={`mr-nav-btn ${canLeft ? 'enabled' : 'disabled'}`}
+            aria-label="Cuộn trái"
+            style={{
+              opacity: canLeft ? 1 : 0.3,
+              cursor: canLeft ? 'pointer' : 'not-allowed'
+            }}
+          >
             <ChevronLeft style={{ width: 16, height: 16 }} />
           </button>
-          <button onClick={() => scroll('right')} disabled={!canRight} className="mr-nav-btn" aria-label="Cuộn phải">
+          <button 
+            onClick={() => scroll('right')} 
+            disabled={!canRight} 
+            className={`mr-nav-btn ${canRight ? 'enabled' : 'disabled'}`}
+            aria-label="Cuộn phải"
+            style={{
+              opacity: canRight ? 1 : 0.3,
+              cursor: canRight ? 'pointer' : 'not-allowed'
+            }}
+          >
             <ChevronRight style={{ width: 16, height: 16 }} />
           </button>
         </div>

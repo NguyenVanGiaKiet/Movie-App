@@ -56,16 +56,18 @@ export default function MovieDetailPage() {
         const eps = toArray(res?.data?.episodes || movieData?.episodes);
         setEpisodes(eps);
 
+        // Không tự động load player khi vào trang
+        // Chỉ load khi người dùng nhấn nút "Xem phim"
         if (movieData?.link_embed) {
-          // Phim lẻ có link_embed → dùng trực tiếp, tự động hiện player
+          // Phim lẻ có link_embed → chỉ lưu lại, chưa hiện player
           setPlayerSrc(movieData.link_embed);
-          setShowPlayer(true);
+          setShowPlayer(false);
         } else {
           const firstEp = eps[0]?.server_data?.[0];
           if (firstEp) {
             setSelectedEp(firstEp);
             setPlayerSrc(firstEp.link_embed || firstEp.link_m3u8 || '');
-            setShowPlayer(true); // vào thẳng player, không hiện màn hình chờ
+            setShowPlayer(false); // chưa hiện player
           }
         }
       } catch (err) {
@@ -117,6 +119,7 @@ export default function MovieDetailPage() {
   };
 
   const handleWatchNow = () => {
+    // Chỉ khi nhấn nút "Xem phim" mới hiện player
     setShowPlayer(true);
     scrollToPlayer();
   };
@@ -124,6 +127,13 @@ export default function MovieDetailPage() {
   const selectEpisode = (ep) => {
     const src = ep.link_embed || ep.link_m3u8 || '';
     setSelectedEp(ep);
+    setPlayerSrc(src);
+    setShowPlayer(true);
+    scrollToPlayer();
+  };
+
+  // Thêm hàm để load server embed khi cần
+  const loadEmbedServer = (src) => {
     setPlayerSrc(src);
     setShowPlayer(true);
     scrollToPlayer();
