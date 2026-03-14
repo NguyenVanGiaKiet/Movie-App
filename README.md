@@ -1,4 +1,4 @@
-# 🎬 CineStream – Web App Xem Phim Trực Tuyến
+# 🎬 HopPhim – Web App Xem Phim Trực Tuyến
 
 Ứng dụng xem phim hiện đại với giao diện Netflix-style, tích hợp API từ [phim.nguonc.com](https://phim.nguonc.com).
 
@@ -156,7 +156,7 @@ Chỉnh sửa `.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_APP_NAME=CineStream
+NEXT_PUBLIC_APP_NAME=HopPhim
 ```
 
 Chạy frontend:

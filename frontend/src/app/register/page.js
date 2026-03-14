@@ -62,7 +62,7 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(form.name, form.email, form.password);
-      toast.success('Đăng ký thành công! Chào mừng đến với CineStream 🎬');
+      toast.success('Đăng ký thành công! Chào mừng đến với HopPhim 🎬');
       router.push('/');
     } catch (err) {
       toast.error(err.message);
@@ -80,7 +80,7 @@ export default function RegisterPage() {
           <Link href="/" className="inline-flex items-center gap-2 group">
             <Film className="w-8 h-8 text-brand-red" />
             <span className="font-display text-3xl tracking-widest text-white group-hover:text-brand-red transition-colors">
-              CINESTREAM
+              HOPPHIM
             </span>
           </Link>
           <p className="text-gray-400 mt-2 text-sm">Tạo tài khoản miễn phí</p>

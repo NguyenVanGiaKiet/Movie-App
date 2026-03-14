@@ -154,12 +154,18 @@ export default function Hero({ movies = [] }) {
 
       {/* ── Content ── */}
       <div className="hero-abs" style={{ zIndex: 10, display: 'flex', alignItems: 'flex-end', paddingBottom: '7rem' }}>
-        <div className="hero-content-wrap">
+        <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', padding: '0 2rem' }}>
           <div className="hero-content-in" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
+
+            {cats.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }}>
+                {cats.map((c, i) => <span key={i} className="hero-tag">{c.name || c}</span>)}
+              </div>
+            )}
 
             <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
 
-            {movie.origin_name && (
+            {movie.origin_name && movie.origin_name !== movie.name && (
               <p className="hero-origin">{movie.origin_name}</p>
             )}
 
@@ -245,6 +251,14 @@ export default function Hero({ movies = [] }) {
           ))}
         </div>
       )}
+      {/* ── Scroll indicator ── */}
+      <div className="hero-scroll-hint">
+        <div className="hero-scroll-mouse">
+          <div className="hero-scroll-wheel" />
+        </div>
+        <span className="hero-scroll-text">Cuộn xuống</span>
+      </div>
+
     </div>
   );
 }

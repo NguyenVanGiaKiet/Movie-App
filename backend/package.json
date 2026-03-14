@@ -1,7 +1,7 @@
 {
   "name": "movie-app-backend",
   "version": "2.0.0",
-  "description": "CineStream Backend API - Self-hosted",
+  "description": "HopPhim Backend API - Self-hosted",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

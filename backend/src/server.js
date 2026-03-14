@@ -33,7 +33,7 @@ app.use('/api/comments', require('./routes/comments'));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: '🎬 CineStream API running!', version: '2.0' });
+  res.json({ success: true, message: '🎬 HopPhim API running!', version: '2.0' });
 });
 
 // 404

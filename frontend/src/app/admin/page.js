@@ -35,7 +35,7 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-display text-4xl text-white tracking-wide">ADMIN PANEL</h1>
-          <p className="text-gray-400 mt-1">Quản lý nội dung CineStream</p>
+          <p className="text-gray-400 mt-1">Quản lý nội dung HopPhim</p>
         </div>
         <Link href="/admin/movies/new"
           className="btn-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold">
@@ -60,7 +60,7 @@ export default function AdminDashboard() {
         {[
           { href: '/admin/movies',     icon: List,  label: 'Danh sách phim',    desc: 'Xem, sửa, xóa phim' },
           { href: '/admin/movies/new', icon: Plus,  label: 'Thêm phim mới',     desc: 'Tạo phim + thêm link video' },
-          { href: '/',                 icon: Globe, label: 'Xem trang web',      desc: 'Mở CineStream' },
+          { href: '/',                 icon: Globe, label: 'Xem trang web',      desc: 'Mở HopPhim' },
         ].map((a, i) => (
           <Link key={i} href={a.href}
             className="glass rounded-2xl p-6 hover:bg-white/10 transition-colors flex items-start gap-4">

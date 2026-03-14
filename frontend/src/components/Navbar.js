@@ -124,10 +124,13 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-            <Film className="w-7 h-7 text-brand-red" />
-            <span className="nav-logo-text font-display text-2xl tracking-widest text-white group-hover:text-brand-red transition-colors">
-              CINESTREAM
-            </span>
+            <Film className="w-10 h-10 text-brand-red" />
+            <div className="flex flex-col">
+              <span className="nav-logo-text font-display text-xl tracking-widest text-white group-hover:text-brand-red transition-colors">
+                HOPPHIM
+              </span>
+              <span className="text-xs text-gray-400">Phim hay cả hộp</span>
+            </div>
           </Link>
 
           {/* Desktop nav links */}

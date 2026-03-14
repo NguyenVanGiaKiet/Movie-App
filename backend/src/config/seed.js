@@ -49,7 +49,7 @@ async function seed() {
   console.log('✅ Countries seeded');
 
   // Admin user
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@cinestream.com';
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@hopphim.com';
   const adminPass  = process.env.ADMIN_PASSWORD || 'Admin@123456';
   let admin = await User.findOne({ email: adminEmail });
   if (!admin) {

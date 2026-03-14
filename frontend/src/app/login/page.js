@@ -41,7 +41,7 @@ export default function LoginPage() {
           <Link href="/" className="inline-flex items-center gap-2 group">
             <Film className="w-8 h-8 text-brand-red" />
             <span className="font-display text-3xl tracking-widest text-white group-hover:text-brand-red transition-colors">
-              CINESTREAM
+              HOPPHIM
             </span>
           </Link>
           <p className="text-gray-400 mt-2 text-sm">Đăng nhập để tiếp tục</p>
