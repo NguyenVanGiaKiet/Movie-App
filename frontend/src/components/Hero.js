@@ -7,8 +7,21 @@ import { Play, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const INTERVAL = 7000;
 
+// Hook detect màn hình
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isMobile;
+}
+
 export default function Hero({ movies = [] }) {
-  const featured = movies.slice(0, 6);
+  const featured  = movies.slice(0, 6);
+  const isMobile  = useIsMobile();
   const total    = featured.length;
 
   const [current,  setCurrent]  = useState(0);
@@ -105,7 +118,10 @@ export default function Hero({ movies = [] }) {
   const prevMovie = prev !== null ? featured[prev] : null;
   if (!movie) return null;
 
-  const bg   = movie.poster_url || movie.thumb_url || '';
+  // Mobile dùng thumb (landscape) fits better; desktop dùng poster (portrait)
+  const bg = isMobile
+    ? (movie.thumb_url  || movie.poster_url || '')
+    : (movie.poster_url || movie.thumb_url  || '');
   const cats = (movie.category || []).slice(0, 3);
   const desc = (movie.content || movie.description || '').replace(/<[^>]*>/g, '').trim();
 
@@ -123,7 +139,7 @@ export default function Hero({ movies = [] }) {
       {prevMovie && (
         <div key={`prev-${prev}`} style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           <Image
-            src={prevMovie.poster_url || prevMovie.thumb_url || ''}
+            src={isMobile ? (prevMovie.thumb_url || prevMovie.poster_url || '') : (prevMovie.poster_url || prevMovie.thumb_url || '')}
             alt="" fill
             className="object-cover"
             style={{ objectFit: 'cover' }}
@@ -159,7 +175,7 @@ export default function Hero({ movies = [] }) {
 
             <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
 
-            {movie.origin_name && (
+            {movie.origin_name && movie.origin_name !== movie.name && (
               <p className="hero-origin">{movie.origin_name}</p>
             )}
 
