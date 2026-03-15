@@ -348,7 +348,7 @@ export default function MovieDetailPage() {
                   {serverData.length > 1 && (
                     <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">Danh sách tập</p>
                   )}
-                  <div className="flex flex-wrap gap-2" style={{maxHeight: "10rem", overflowY: "auto", paddingRight: "4px"}}>
+                  <div className="grid grid-cols-4 sm:grid-cols-8 md:grid-cols-10 gap-2" style={{maxHeight: "9rem", overflowY: "auto", paddingRight: "4px"}}>
                     {serverData.map((ep, i) => (
                       <button key={i} onClick={() => selectEpisode(ep)}
                         className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
