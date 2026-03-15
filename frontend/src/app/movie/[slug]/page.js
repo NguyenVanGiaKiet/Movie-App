@@ -185,10 +185,10 @@ export default function MovieDetailPage() {
         <div className="flex flex-col sm:flex-row lg:flex-row gap-6 sm:gap-8">
 
           {/* Poster */}
-          <div className="detail-poster-wrap flex-shrink-0 w-48 sm:w-56 mx-auto lg:mx-0">
+          <div className="detail-poster-wrap flex-shrink-0 w-52 sm:w-60 mx-auto lg:mx-0">
             <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
               {bg ? (
-                <Image src={movie.thumb_url || bg} alt={movie.name || ''} fill className="object-cover" />
+                <Image src={movie.thumb_url || bg} alt={movie.name || ''} fill className="object-cover" priority />
               ) : (
                 <div className="w-full h-full bg-dark-card flex items-center justify-center">
                   <Film className="w-16 h-16 text-gray-600" />
@@ -263,11 +263,13 @@ export default function MovieDetailPage() {
                   {desc}
                 </p>
                 {desc.length > 200 && (
-                  <button onClick={() => setShowFullDesc(v => !v)}
-                    className="flex items-center gap-1 text-xs text-brand-red mt-1.5 hover:underline">
-                    {showFullDesc ? 'Thu gọn' : 'Xem thêm'}
-                    <ChevronDown className={`w-3 h-3 transition-transform ${showFullDesc ? 'rotate-180' : ''}`} />
-                  </button>
+                  <div className="flex justify-center mt-2">
+                    <button onClick={() => setShowFullDesc(v => !v)}
+                      className="flex items-center gap-1 text-xs text-brand-red hover:underline">
+                      {showFullDesc ? 'Thu gọn' : 'Xem thêm'}
+                      <ChevronDown className={`w-3 h-3 transition-transform ${showFullDesc ? 'rotate-180' : ''}`} />
+                    </button>
+                  </div>
                 )}
               </div>
             )}

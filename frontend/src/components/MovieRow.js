@@ -1,75 +1,54 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MovieCard, { MovieCardSkeleton } from './MovieCard';
 
 export default function MovieRow({ title, movies = [], loading = false, error = null }) {
   const rowRef     = useRef(null);
   const [canLeft,  setCanLeft]  = useState(false);
-  const [canRight, setCanRight] = useState(true);
+  const [canRight, setCanRight] = useState(false);
   const isDragging = useRef(false);
   const startX     = useRef(0);
   const scrollBase = useRef(0);
   const [dragging, setDragging] = useState(false);
 
-  const updateArrows = () => {
+  const updateArrows = useCallback(() => {
     const el = rowRef.current;
     if (!el) return;
-    
-    const scrollLeft = el.scrollLeft;
-    const scrollWidth = el.scrollWidth;
-    const clientWidth = el.clientWidth;
-    
-    // Debug log để kiểm tra
-    console.log('updateArrows:', { scrollLeft, scrollWidth, clientWidth });
-    
-    setCanLeft(scrollLeft > 4);
-    setCanRight(scrollLeft < scrollWidth - clientWidth - 4);
-  };
-
-  // Force scroll to 0 after hydration (beat browser scroll-restoration)
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    el.scrollLeft = 0;
-    const raf = requestAnimationFrame(() => {
-      el.scrollLeft = 0;
-      updateArrows();
-    });
-    return () => cancelAnimationFrame(raf);
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanLeft(scrollLeft > 2);
+    setCanRight(scrollLeft < scrollWidth - clientWidth - 2);
   }, []);
 
-  // Update arrows khi movies thay đổi
+  // Reset scroll + check arrows after content loads
   useEffect(() => {
-    if (!loading && !error && movies.length > 0) {
-      const raf = requestAnimationFrame(() => {
-        updateArrows();
-      });
-      return () => cancelAnimationFrame(raf);
-    }
-  }, [movies, loading, error]);
+    const el = rowRef.current;
+    if (!el || loading) return;
+    // Wait for DOM to paint
+    const raf = requestAnimationFrame(() => {
+      el.scrollLeft = 0;
+      requestAnimationFrame(() => updateArrows());
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [loading, movies.length, updateArrows]);
+
+  // Watch for resize (e.g. window resize changes clientWidth)
+  useEffect(() => {
+    const el = rowRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => updateArrows());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [updateArrows]);
 
   const scroll = (dir) => {
     const el = rowRef.current;
     if (!el) return;
-    
-    const scrollAmount = el.clientWidth * 0.75;
-    const targetScroll = dir === 'left' 
-      ? Math.max(0, el.scrollLeft - scrollAmount)
-      : el.scrollLeft + scrollAmount;
-    
-    console.log('scroll:', { dir, currentScroll: el.scrollLeft, targetScroll, scrollAmount });
-    
-    el.scrollTo({
-      left: targetScroll,
-      behavior: 'smooth'
-    });
-    
-    // Update arrows sau khi scroll hoàn tất
-    setTimeout(() => {
-      updateArrows();
-    }, 500);
+    const amount = el.clientWidth * 0.8;
+    el.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
+    // Poll a few times after scroll to catch exact end
+    [100, 200, 350, 500].forEach(ms => setTimeout(updateArrows, ms));
   };
 
   /* ── Drag / mouse ── */
@@ -106,27 +85,19 @@ export default function MovieRow({ title, movies = [], loading = false, error = 
           {title}
         </h2>
         <div className="mr-nav">
-          <button 
-            onClick={() => scroll('left')} 
-            disabled={!canLeft} 
-            className={`mr-nav-btn ${canLeft ? 'enabled' : 'disabled'}`}
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canLeft}
+            className="mr-nav-btn"
             aria-label="Cuộn trái"
-            style={{
-              opacity: canLeft ? 1 : 0.3,
-              cursor: canLeft ? 'pointer' : 'not-allowed'
-            }}
           >
             <ChevronLeft style={{ width: 16, height: 16 }} />
           </button>
-          <button 
-            onClick={() => scroll('right')} 
-            disabled={!canRight} 
-            className={`mr-nav-btn ${canRight ? 'enabled' : 'disabled'}`}
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canRight}
+            className="mr-nav-btn"
             aria-label="Cuộn phải"
-            style={{
-              opacity: canRight ? 1 : 0.3,
-              cursor: canRight ? 'pointer' : 'not-allowed'
-            }}
           >
             <ChevronRight style={{ width: 16, height: 16 }} />
           </button>
@@ -152,7 +123,7 @@ export default function MovieRow({ title, movies = [], loading = false, error = 
             ? Array.from({ length: 8 }).map((_, i) => <MovieCardSkeleton key={i} />)
             : error
             ? <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 14, padding: '16px 0' }}>Không thể tải phim.</p>
-            : movies.map((m, i) => <MovieCard key={m.slug || i} movie={m} />)
+            : movies.map((m, i) => <MovieCard key={m.slug || i} movie={m} priority={i < 4} />)
           }
         </div>
       </div>

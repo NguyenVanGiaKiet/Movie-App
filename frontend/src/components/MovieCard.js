@@ -26,7 +26,7 @@ function extractYear(movie) {
   return '';
 }
 
-export default function MovieCard({ movie, className = '' }) {
+export default function MovieCard({ movie, className = '', priority = false }) {
   const [imgErr, setImgErr] = useState(false);
 
   if (!movie) return null;
@@ -47,7 +47,8 @@ export default function MovieCard({ movie, className = '' }) {
           {thumb ? (
             <Image src={thumb} alt={name} fill className="object-cover"
               onError={() => setImgErr(true)}
-              sizes="(max-width:640px) 160px, 176px" />
+              sizes="(max-width:640px) 160px, 176px"
+              priority={priority} />
           ) : (
             <div className="mc-fallback">
               <Play style={{ width: 36, height: 36, color: 'rgba(255,255,255,.2)' }} />

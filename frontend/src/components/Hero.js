@@ -175,7 +175,7 @@ export default function Hero({ movies = [] }) {
 
             <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
 
-            {movie.origin_name && movie.origin_name !== movie.name && (
+            {movie.origin_name && (
               <p className="hero-origin">{movie.origin_name}</p>
             )}
 
@@ -261,6 +261,7 @@ export default function Hero({ movies = [] }) {
           ))}
         </div>
       )}
+      
       {/* ── Scroll indicator ── */}
       <div className="hero-scroll-hint">
         <div className="hero-scroll-mouse">
