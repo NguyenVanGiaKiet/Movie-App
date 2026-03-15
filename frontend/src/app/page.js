@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Hero from '@/components/Hero';
 import MovieRow from '@/components/MovieRow';
+import SeriesBanner from '@/components/SeriesBanner';
+import TopRankRow from '@/components/TopRankRow';
+import NewMovieRow from '@/components/NewMovieRow';
 import { movieAPI } from '@/lib/api';
 
 // Extract items from various API response shapes
@@ -46,9 +49,9 @@ export default function HomePage() {
     <div className="page-enter">
       <Hero movies={newMovies.slice(0, 5)} />
       <div className="pt-8">
-        <MovieRow title="Phim Mới Cập Nhật" movies={newMovies} loading={loading} />
-        <MovieRow title="Phim Lẻ"           movies={phimLe}    loading={loading} />
-        <MovieRow title="Phim Bộ"           movies={phimBo}    loading={loading} />
+        <TopRankRow title="Phim Mới" movies={newMovies} loading={loading} />
+        <NewMovieRow title="Phim Lẻ" movies={phimLe} loading={loading} />
+        <SeriesBanner movies={phimBo} loading={loading} />
         <MovieRow title="Hoạt Hình"         movies={hoatHinh}  loading={loading} />
       </div>
     </div>
