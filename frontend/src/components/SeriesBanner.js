@@ -79,15 +79,10 @@ export default function SeriesBanner({ movies = [], loading = false }) {
         {/* Gradients */}
         <div className="sb-grad-l" />
         <div className="sb-grad-b" />
+        <div className="sb-grid-overlay" />
 
         {/* Content */}
         <div className="sb-content" key={`c-${current}`}>
-          <div className="sb-meta-row">
-            {movie.quality       && <span className="sb-qlty">{movie.quality}</span>}
-            {movie.year          && <span className="sb-pill">{movie.year}</span>}
-            {movie.lang          && <span className="sb-pill">{movie.lang}</span>}
-            {movie.episode_current && <span className="sb-pill">{movie.episode_current}</span>}
-          </div>
           <h3 className="sb-title">{(movie.name || '').toUpperCase()}</h3>
           {movie.origin_name && (
             <p className="sb-origin">{movie.origin_name}</p>

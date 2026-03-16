@@ -106,7 +106,7 @@ export default function MovieDetailPage() {
           },
         });
         setIsFavorite(true);
-        toast.success('Đã thêm vào yêu thích ❤️');
+        toast.success('Đã thêm vào yêu thích');
       }
     } catch (err) { toast.error(err.message); }
     finally { setFavLoading(false); }
@@ -176,8 +176,12 @@ export default function MovieDetailPage() {
       {/* ── Hero backdrop ─────────────────────────────────────── */}
       <div className="detail-hero relative h-[55vh] overflow-hidden">
         {bg && <Image src={bg} alt={movie.name || ''} fill className="object-cover" priority quality={80} />}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#181820] via-[#181820]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#181820] via-transparent to-black/20" />
+        
+        <div className="detail-grid-overlay absolute inset-0" />
+        <div className="detail-grad-t" />
+        <div className="detail-grad-b" />
+        <div className="detail-grad-r" />
+        <div className="detail-grad-l" />
       </div>
 
       {/* ── Main content ──────────────────────────────────────── */}
@@ -188,7 +192,10 @@ export default function MovieDetailPage() {
           <div className="detail-poster-wrap flex-shrink-0 w-52 sm:w-60 mx-auto lg:mx-0">
             <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
               {bg ? (
-                <Image src={movie.thumb_url || bg} alt={movie.name || ''} fill className="object-cover" priority />
+                <>
+                  <Image src={movie.thumb_url || bg} alt={movie.name || ''} fill className="object-cover" priority />
+                  <div className="detail-poster-grid-overlay absolute inset-0" />
+                </>
               ) : (
                 <div className="w-full h-full bg-dark-card flex items-center justify-center">
                   <Film className="w-16 h-16 text-gray-600" />

@@ -1,13 +1,25 @@
 'use client';
-
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 
-const RANK_COLORS = ['#E50914','#ff6000','#ffa500','#aaa','#888','#777','#666','#666','#555','#555'];
+const RANK_COLORS = [
+  '#DC2626', // 1 - đậm nhất (vàng cam đậm)
+  '#EA580C', // 2
+  '#F97316', // 3
+  '#EAB308', // 4
+  '#84CC16', // 5
+  '#22C55E', // 6
+  '#14B8A6', // 7
+  '#0EA5E9', // 8
+  '#6366F1', // 9
+  '#9333EA', // 10
+];
 
-export default function TopRankRow({ title, movies = [], loading = false, linkHref = '#' }) {
+export default function NewMovieRow({ title, movies = [], loading = false, linkHref = '#' }) {
+  const router = useRouter();
   const items    = movies.slice(0, 10);
   const trackRef = useRef(null);
   const [canL, setCanL] = useState(false);
@@ -16,6 +28,7 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
   const dragX   = useRef(0);
   const scrollB = useRef(0);
   const [dragging, setDragging] = useState(false);
+  const [dragDistance, setDragDistance] = useState(0);
 
   const updateArrows = useCallback(() => {
     const el = trackRef.current; if (!el) return;
@@ -42,16 +55,40 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
     [150, 350, 550].forEach(ms => setTimeout(updateArrows, ms));
   };
 
-  const onMD = (e) => { if (e.button !== 0) return; isDrag.current = true; dragX.current = e.pageX; scrollB.current = trackRef.current.scrollLeft; setDragging(true); e.preventDefault(); };
-  const onMM = (e) => { if (!isDrag.current) return; trackRef.current.scrollLeft = scrollB.current - (e.pageX - dragX.current); };
-  const onMU = () => { isDrag.current = false; setDragging(false); };
+  const onMD = (e) => { 
+    if (e.button !== 0) return; 
+    isDrag.current = true; 
+    dragX.current = e.pageX; 
+    scrollB.current = trackRef.current.scrollLeft; 
+    setDragging(true); 
+    setDragDistance(0);
+    e.preventDefault(); 
+  };
+  const onMM = (e) => { 
+    if (!isDrag.current) return; 
+    const currentX = e.pageX;
+    const distance = Math.abs(currentX - dragX.current);
+    setDragDistance(distance);
+    trackRef.current.scrollLeft = scrollB.current - (currentX - dragX.current); 
+  };
+  const onMU = () => { 
+    isDrag.current = false; 
+    setDragging(false); 
+    setTimeout(() => setDragDistance(0), 100);
+  };
+
+  const handleItemClick = (e, slug) => {
+    // Only navigate if not dragging
+    if (dragDistance < 5) {
+      router.push(`/movie/${slug}`);
+    }
+  };
 
   return (
     <section className="nmr-root">
       <div className="nmr-header">
         <h2 className="mr-title"><span className="mr-title-bar"/>{title}</h2>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <Link href={linkHref} className="nmr-see-all">Xem tất cả →</Link>
           <div style={{display:'flex',gap:5}}>
             <button className="mr-nav-btn" onClick={()=>doScroll('l')} disabled={!canL}><ChevronLeft style={{width:15,height:15}}/></button>
             <button className="mr-nav-btn" onClick={()=>doScroll('r')} disabled={!canR}><ChevronRight style={{width:15,height:15}}/></button>
@@ -84,8 +121,7 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
                 const color = RANK_COLORS[i] || '#555';
                 const ep    = m.episode_current || '';
                 return (
-                  <Link key={m.slug||i} href={`/movie/${m.slug}`} className="nmr-item">
-
+                  <div key={m.slug||i} className="nmr-item" onClick={(e) => handleItemClick(e, m.slug)} style={{'--rank-color': color}}>
                         {/* ── Poster ── */}
                         <div className="nmr-poster group">
 
@@ -127,17 +163,10 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
                           <p className="nmr-origin">{m.origin_name}</p>
                         )}
 
-                        {/* Meta row */}
-                        {(m.year || ep) && (
-                          <div className="nmr-meta">
-                            {m.year && <span>{m.year}</span>}
-                            {m.year && ep && <span className="nmr-sep">•</span>}
-                            {ep && <span>{ep}</span>}
-                          </div>
-                        )}
+                        
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })
           }

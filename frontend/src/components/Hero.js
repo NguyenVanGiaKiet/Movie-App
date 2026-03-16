@@ -147,6 +147,7 @@ export default function Hero({ movies = [] }) {
             unoptimized
           />
           <div className="hero-abs hero-grad-r" />
+          <div className="hero-abs hero-grad-l" />
           <div className="hero-abs hero-grad-b" />
         </div>
       )}
@@ -165,7 +166,10 @@ export default function Hero({ movies = [] }) {
           />
         )}
         <div className="hero-abs hero-grad-r" />
+        <div className="hero-abs hero-grad-l" />
         <div className="hero-abs hero-grad-b" />
+        <div className="hero-abs hero-grad-t" />
+        <div className="hero-abs hero-grid-overlay" />
       </div>
 
       {/* ── Content ── */}
