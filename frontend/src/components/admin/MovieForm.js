@@ -26,7 +26,7 @@ const Select = ({ label, options, ...props }) => (
     <label className="block text-xs text-gray-400 mb-1.5 font-medium">{label}</label>
     <select className="input-dark w-full px-3 py-2.5 rounded-xl text-sm" style={{background:'rgba(255,255,255,0.05)'}} {...props}>
       {options.map(o => (
-        <option key={o.value || o} value={o.value || o} style={{background:'#1a1a22'}}>
+        <option key={o.value || o} value={o.value || o} style={{background:'#2A2A38'}}>
           {o.label || o}
         </option>
       ))}

@@ -176,8 +176,8 @@ export default function MovieDetailPage() {
       {/* ── Hero backdrop ─────────────────────────────────────── */}
       <div className="detail-hero relative h-[55vh] overflow-hidden">
         {bg && <Image src={bg} alt={movie.name || ''} fill className="object-cover" priority quality={80} />}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0F] via-[#0A0A0F]/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0F] via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#181820] via-[#181820]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#181820] via-transparent to-black/20" />
       </div>
 
       {/* ── Main content ──────────────────────────────────────── */}

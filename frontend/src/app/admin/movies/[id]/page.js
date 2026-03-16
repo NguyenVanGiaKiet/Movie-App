@@ -34,13 +34,13 @@ export default function EditMoviePage() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-[#0A0A0F] pt-20 flex items-center justify-center">
+    <div className="min-h-screen bg-[#181820] pt-20 flex items-center justify-center">
       <div className="w-8 h-8 border-2 border-brand-red border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] pt-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#181820] pt-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin/movies" className="p-2 glass rounded-xl hover:bg-white/10">
           <ArrowLeft className="w-5 h-5" />

@@ -323,7 +323,7 @@ export default function Navbar() {
                   return (
                     <button key={movie.slug || i} onClick={() => handleSuggestionClick(movie.slug)}
                       style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-                      <div style={{ flexShrink: 0, width: 36, height: 48, borderRadius: 6, overflow: 'hidden', background: '#1a1a24', position: 'relative' }}>
+                      <div style={{ flexShrink: 0, width: 36, height: 48, borderRadius: 6, overflow: 'hidden', background: '#2A2A38', position: 'relative' }}>
                         {thumb && <Image src={thumb} alt="" fill style={{ objectFit: 'cover' }} sizes="36px" unoptimized />}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>

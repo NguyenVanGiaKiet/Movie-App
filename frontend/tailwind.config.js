@@ -15,11 +15,11 @@ module.exports = {
           'red-light': '#F40612',
         },
         dark: {
-          bg: '#0A0A0F',
-          surface: '#141418',
-          card: '#1A1A22',
-          border: '#2A2A35',
-          muted: '#3A3A48',
+          bg: '#181820',
+          surface: '#22222E',
+          card: '#2A2A38',
+          border: '#3A3A45',
+          muted: '#4A4A50',
         },
       },
       fontFamily: {
@@ -42,8 +42,8 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-gradient': 'linear-gradient(to right, rgba(10,10,15,0.95) 40%, rgba(10,10,15,0.3) 100%)',
-        'card-gradient': 'linear-gradient(to top, rgba(10,10,15,1) 0%, rgba(10,10,15,0.5) 50%, transparent 100%)',
+        'hero-gradient': 'linear-gradient(to right, rgba(24,24,32,0.95) 40%, rgba(24,24,32,0.3) 100%)',
+        'card-gradient': 'linear-gradient(to top, rgba(24,24,32,1) 0%, rgba(24,24,32,0.5) 50%, transparent 100%)',
       },
     },
   },

@@ -100,7 +100,14 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
                     {m.origin_name && (
                       <p className="trr-origin">{m.origin_name}</p>
                     )}
-                    {m.episode_current && <p className="trr-ep-text">{m.episode_current}</p>}
+                    {/* Meta row */}
+                    {(m.year || m.episode_current) && (
+                      <div className="trr-meta">
+                        {m.year && <span>{m.year}</span>}
+                        {m.year && m.episode_current && <span className="trr-sep">•</span>}
+                        {m.episode_current && <span>{m.episode_current}</span>}
+                      </div>
+                    )}
                   </Link>
                 );
               })

@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-screen bg-[#0A0A0F] text-white" style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}>
+      <body className="min-h-screen bg-[#181820] text-white debug-bg" style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}>
         <AuthProvider>
           <Navbar />
           <main className="min-h-screen">
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           <Toaster
             position="top-right"
             toastOptions={{
-              style: { background: '#1A1A22', color: '#F5F5F5', border: '1px solid rgba(255,255,255,0.08)' },
+              style: { background: '#2A2A38', color: '#F5F5F5', border: '1px solid rgba(255,255,255,0.08)' },
               success: { iconTheme: { primary: '#E50914', secondary: 'white' } },
             }}
           />

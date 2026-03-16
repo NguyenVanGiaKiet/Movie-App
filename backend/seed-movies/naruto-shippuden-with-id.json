@@ -1,0 +1,417 @@
+{
+  "_id": {
+    "$oid": "65a390000000000000000017"
+  },
+  "name": "Chiếc Bật Lửa Và Váy Công Chúa",
+  "origin_name": "Lighter & Princess",
+  "slug": "chiec-bat-lua-va-vay-cong-chua",
+  "content": "Xoay quanh câu chuyện kể về nhân vật Chu Vận và Lý Tuân. Chu Vận vừa mới bắt đầu cuộc sống đại học thì đã gặp phải Lý Tuân xông vào làm đảo lộn hết cuộc sống. Cô hiểu lầm anh là con nhà giàu học dốt. Thực tế, Lý Tuân lại là một thiên tài lập trình, sinh viên thuộc diện đặc cách tuyển sinh của trường đại học. Hai người họ qua mấy lần đối đầu đều có một chút tán thưởng đối với đối phương. Trong thời gian học tập, Chu Vận nhiều lần bị Phương Chí Tịnh gây khó khăn, Lý Tuân ra tay giúp đỡ, còn mời cô tham gia đội ngũ do mình xây dựng đại diện cho trường học tham gia một cuộc thi lập trình lớn. Trong quá trình đồng hành cùng nhau, hai người dần dần nảy sinh tình cảm, gạt bỏ những khác biệt và cản trở của gia đình để ở bên nhau. Giữa lúc tình cảm càng ngày càng phát triển, công cuộc gây dựng sự nghiệp cũng gần chạm đến thành công thì Phương Chí Tĩnh gián tiếp gây ra cái chết của chị gái Lý Tuân, Lý Tuân trong lúc kích động đã đả thương Phương Chí Tịnh, bị kết án tù. Sau khi ra tù, anh phải đối diện với hiện thực sa sút, tương lai mịt mờ, mà Chu Vận từ đầu đến cuối đều không xa rời, trợ giúp Lý Tuân xoay chuyển tình thế. Trong quá trình cạnh tranh kinh doanh, cả 2 đã đánh bại đối thủ là Phương Chí Tịnh và Cao Kiến Hồng, thu hồi lại công ty vốn thuộc về Lý Tuân. Cuối cùng, Chu Vận bỏ hết thảy vì Lý Tuân, mà Lý Tuân cũng vượt qua nỗi đau gia đình, học được cách mở lòng và giữ lấy tình yêu của mình.",
+  "type": "phim-bo",
+  "status": "completed",
+  "thumb_url": "https://image.tmdb.org/t/p/original/p7OZCNNI3AQfMhcBvTW5VLHn5LW.jpg",
+  "poster_url": "https://image.tmdb.org/t/p/original/wxz9DOg9wMhkl4E2F3CjwZWSYS9.jpg",
+  "trailer_url": "https://www.youtube.com/embed/cYuHqpO45kY",
+  "time": "40 phút/tập",
+  "episode_current": "Hoàn tất (36/36)",
+  "episode_total": "36",
+  "quality": "HD",
+  "lang": "Vietsub",
+  "year": 2021,
+  "category": [
+    {
+      "$oid": "69b26ebd233f020096e6d711"
+    }
+  ],
+  "country": [
+    {
+      "$oid": "69b26ebd233f020096e6d71a"
+    }
+  ],
+  "director": [
+    "Liu Jun Jie"
+  ],
+  "actor": [
+    "Trần Phi Vũ",
+    "Trương Tịnh Nghi",
+    "Tăng Khả Ny",
+    "Thôi Vũ Hâm"
+  ],
+  "episodes": [
+    {
+      "_id": {
+        "$oid": "65a400000000000000170000"
+      },
+      "server_name": "Server Vietsub",
+      "server_data": [
+        {
+          "_id": {
+            "$oid": "65a40000000000020000005f"
+          },
+          "name": "Tập 1",
+          "slug": "tap-1",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=b141343732b6f87e142159a5ab6e01d3",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000006f"
+          },
+          "name": "Tập 2",
+          "slug": "tap-2",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=00f147fcb27ce106059fc9684fe913a2",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000007f"
+          },
+          "name": "Tập 3",
+          "slug": "tap-3",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=bd99ca0fd72026f6d2fefc657a6b3619",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000008f"
+          },
+          "name": "Tập 4",
+          "slug": "tap-4",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=dac12f376e8e3b4e1ac94fd0b82b96aa",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000009f"
+          },
+          "name": "Tập 5",
+          "slug": "tap-5",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=f8cda43bed5c74ea4de23d6ad112d01c",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000010f"
+          },
+          "name": "Tập 6",
+          "slug": "tap-6",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=372a83a3a5a2406c68ca1d3daeefcdce",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000011f"
+          },
+          "name": "Tập 7",
+          "slug": "tap-7",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=8b5d37ec9890c5d15bbb77b9ef21bd2f",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000012f"
+          },
+          "name": "Tập 8",
+          "slug": "tap-8",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=352be356636db42b0e4466168a903df8",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000013f"
+          },
+          "name": "Tập 9",
+          "slug": "tap-9",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=4b9b27d39bd556f8703a3031027c3e9d",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000014f"
+          },
+          "name": "Tập 10",
+          "slug": "tap-10",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=ec5a15d59cee46da16cc98954aab5961",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000015f"
+          },
+          "name": "Tập 11",
+          "slug": "tap-11",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=510d662eb6d7f2166f7c7b36ae5ad3d8",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000016f"
+          },
+          "name": "Tập 12",
+          "slug": "tap-12",
+          "filename": "",
+          "link_embed": "https://embed13.streamc.xyz/embed.php?hash=2d9ec29fc39c902f10ab0a14a0a041f2",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000017f"
+          },
+          "name": "Tập 13",
+          "slug": "tap-13",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=e00ef4b6a0562a4fd71e430b3fbf4161",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000018f"
+          },
+          "name": "Tập 14",
+          "slug": "tap-14",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=510e1015530dba7793713b212243ba97",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000019f"
+          },
+          "name": "Tập 15",
+          "slug": "tap-15",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=b0c877525a173faaada98ff652e7c66f",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000020f"
+          },
+          "name": "Tập 16",
+          "slug": "tap-16",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=2075a674dc9829eb64c79a97bac88518",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000021f"
+          },
+          "name": "Tập 17",
+          "slug": "tap-17",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=14dfcd1f1112beba2ce15135fb330d64",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000022f"
+          },
+          "name": "Tập 18",
+          "slug": "tap-18",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=5e0c89080509847b2c7c9b4bfe9b6a04",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000023f"
+          },
+          "name": "Tập 19",
+          "slug": "tap-19",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=84e079a4d5721a05b5da4bf3e37fdf3a",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000024f"
+          },
+          "name": "Tập 20",
+          "slug": "tap-20",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=31fd44b5ab636daf75380848f8a09c04",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000025f"
+          },
+          "name": "Tập 21",
+          "slug": "tap-21",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=3934f43d55e02bca3d2e09b34bb273e2",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000026f"
+          },
+          "name": "Tập 22",
+          "slug": "tap-22",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=3b44d8e5158cb9c61b2060b229cb11f6",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000027f"
+          },
+          "name": "Tập 23",
+          "slug": "tap-23",
+          "filename": "",
+          "link_embed": "https://embed11.streamc.xyz/embed.php?hash=19182fc83a0f3388520f58a7f7fa7444",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000028f"
+          },
+          "name": "Tập 24",
+          "slug": "tap-24",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=876dc4d709cb2f0ffa27ed51f685458d",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000029f"
+          },
+          "name": "Tập 25",
+          "slug": "tap-25",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=41dcbbe6f6be88c98a84315a3854b8f1",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000030f"
+          },
+          "name": "Tập 26",
+          "slug": "tap-26",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=cde37947939617357aa0499b761555bd",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000031f"
+          },
+          "name": "Tập 27",
+          "slug": "tap-27",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=65f32eb76f94d3cfef9821bcf557eea8",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000032f"
+          },
+          "name": "Tập 28",
+          "slug": "tap-28",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=e49ca7998abd53dcd47d09cde612471a",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000033f"
+          },
+          "name": "Tập 29",
+          "slug": "tap-29",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=1f74012aa65c63fc3643659738f607ac",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000034f"
+          },
+          "name": "Tập 30",
+          "slug": "tap-30",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=c5bf9eb9a01bd9b86248b66d2a6ee274",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000035f"
+          },
+          "name": "Tập 31",
+          "slug": "tap-31",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=c16a37d67d92219094cb66aca0824b37",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000036f"
+          },
+          "name": "Tập 32",
+          "slug": "tap-32",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=9755151df59acfdeb4f73f03775e33e6",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000037f"
+          },
+          "name": "Tập 33",
+          "slug": "tap-33",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=320fdfd8567c07d5d40a954113359866",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000038f"
+          },
+          "name": "Tập 34",
+          "slug": "tap-34",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=43e4fa95864c7f09df40057ded7d68c8",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000039f"
+          },
+          "name": "Tập 35",
+          "slug": "tap-35",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=e9a3ccf3c9b2a69aa715ef317c7c14b9",
+          "link_m3u8": ""
+        },
+        {
+          "_id": {
+            "$oid": "65a40000000000020000040f"
+          },
+          "name": "Tập 36",
+          "slug": "tap-36",
+          "filename": "",
+          "link_embed": "https://embed17.streamc.xyz/embed.php?hash=593c8e412107d61b21c225630d434456",
+          "link_m3u8": ""
+        }
+      ]
+    }
+  ],
+  "view": 145305,
+  "is_shown": true,
+  "createdAt": {
+    "$date": "2026-03-15T06:08:13.000Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-16T05:27:28.145Z"
+  }
+}
