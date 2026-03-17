@@ -2,100 +2,125 @@ const mongoose = require("mongoose");
 
 // 🔗 Kết nối MongoDB
 mongoose.connect("mongodb://localhost:27017/movieapp", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
 
 // 📦 Schema đơn giản (bạn có thể chỉnh lại)
 const movieSchema = new mongoose.Schema({
-  name: String,
-  origin_name: String,
-  slug: String,
-  content: String,
-  type: String,
-  status: String,
-  thumb_url: String,
-  poster_url: String,
-  trailer_url: String,
-  time: String,
-  episode_current: String,
-  episode_total: String,
-  quality: String,
-  lang: String,
-  year: Number,
-  category: [mongoose.Schema.Types.ObjectId],
-  country: [mongoose.Schema.Types.ObjectId],
-  director: [String],
-  actor: [String],
-  episodes: Array,
-  view: Number,
-  is_shown: Boolean,
+    name: String,
+    origin_name: String,
+    slug: String,
+    content: String,
+    type: String,
+    status: String,
+    thumb_url: String,
+    poster_url: String,
+    trailer_url: String,
+    time: String,
+    episode_current: String,
+    episode_total: String,
+    quality: String,
+    lang: String,
+    year: Number,
+    category: [mongoose.Schema.Types.ObjectId],
+    country: [mongoose.Schema.Types.ObjectId],
+    director: [String],
+    actor: [String],
+    episodes: Array,
+    view: Number,
+    is_shown: Boolean,
 }, { timestamps: true });
 
 const Movie = mongoose.model("Movie", movieSchema);
 
 // 📥 DATA (bạn có thể thay bằng file JSON hoặc API)
 const movieData = {
-  name: "Mộ Đom Đóm",
-  origin_name: "火垂るの墓/Grave of the Fireflies",
-  slug: "mo-dom-dom",
-  content: "Bộ phim được đặt trong bối cảnh giai đoạn cuối chiến tranh thế giới thứ 2 ở Nhật, kể về câu chuyện cảm động về tình anh em của hai đứa trẻ mồ côi là Seita và Setsuko. Hai anh em mất mẹ trong một trận bom dữ dội của không quân Mỹ khi cha của chúng đang chiến đấu cho Hải quân Nhật. Hai đứa bé phải vật lộn giữa nạn đói, giữa sự thờ ơ của những người xung quanh (trong đó có cả người cô họ của mình)...",
-  type: "phim-le",
-  status: "completed",
-  thumb_url: "https://image.tmdb.org/t/p/original/dz17PRgG2ERqpuuE1xbMw2rIYaJ.jpg",
-  poster_url: "https://image.tmdb.org/t/p/original/aHaqZpOL7UyVu0nKqp3SMz0o2E1.jpg",
-  trailer_url: "https://www.youtube.com/embed/HgDzVFMi238",
-  time: "89 phút",
-  episode_current: "Full",
-  episode_total: "1",
-  quality: "HD",
-  lang: "Vietsub",
-  year: 1988,
-  category: [
-    "69b26ebd233f020096e6d70e",
-    "69b26ebd233f020096e6d718",
-    "69b26ebd233f020096e6d715"
-  ],
-  country: [
-    "69b26ebd233f020096e6d71b"
-  ],
-  director: ["Isao Takahata"],
-  actor: ["Tsutomu Tatsumi", "Ayano Shiraishi", "Yoshiko Shinohara"],
-  episodes: [
-    {
-      server_name: "Server Vietsub",
-      server_data: [
+    name: "Thế Giới Không Lối Thoát (Phần 3)",
+    origin_name: "Alice In Borderland (Season 3)",
+    slug: "the-gioi-khong-loi-thoat-phan-3",
+    content: "Ở Mùa 3, họ đã kết hôn và sống một cuộc sống bình thường, nhưng ký ức về Borderland thi thoảng hiện lên qua giấc mơ hoặc ảo giác.",
+    type: "phim-bo",
+    status: "completed",
+    thumb_url: "https://image.tmdb.org/t/p/original/1B1hllL2Fjap1f2EUsHjBqny3Kg.jpg",
+    poster_url: "https://image.tmdb.org/t/p/original/c8WeahQQ9DbKOln4JKTZ5flg1Qe.jpg",
+    trailer_url: "https://www.youtube.com/embed/-gPsHwkiXwI",
+    time: "50 phút/tập",
+    episode_current: "Hoàn tất (8/8)",
+    episode_total: "8",
+    quality: "HD",
+    lang: "Vietsub",
+    year: 2025,
+    category: [
+        "69b26ebd233f020096e6d70c",
+        "69b26ebd233f020096e6d718",
+        "69b26ebd233f020096e6d713"
+    ],
+    country: [
+        "69b26ebd233f020096e6d71b"
+    ],
+    director: ["Shinsuke Sato"],
+    actor: ["Yamazaki Kento", "Tsuchiya Tao", "Murakami Nijiro"],
+    episodes: [
         {
-          name: "Full",
-          slug: "full",
-          link_embed: "https://embed6.streamc.xyz/embed.php?hash=a4174326d188dd9103ebbe4290a611b9",
+            server_name: "Server Vietsub",
+            server_data: [
+  {
+    "name": "Tập 1",
+    "slug": "tap-1",
+    "link_embed": "https://embed12.streamc.xyz/embed.php?hash=c34dcd68cf9c87441dc106bf5de115d5"
+  },
+  {
+    "name": "Tập 2",
+    "slug": "tap-2",
+    "link_embed": "https://embed13.streamc.xyz/embed.php?hash=1300dc9f0c2fe0bc8963044549011235"
+  },
+  {
+    "name": "Tập 3",
+    "slug": "tap-3",
+    "link_embed": "https://embed11.streamc.xyz/embed.php?hash=653841dfcef2ccd85f4dee1e7961019d"
+  },
+  {
+    "name": "Tập 4",
+    "slug": "tap-4",
+    "link_embed": "https://embed11.streamc.xyz/embed.php?hash=86c94b7fd8750d45cedc58b935620a76"
+  },
+  {
+    "name": "Tập 5",
+    "slug": "tap-5",
+    "link_embed": "https://embed12.streamc.xyz/embed.php?hash=da800442baea5c2b8194bb0b5319fad5"
+  },
+  {
+    "name": "Tập 6",
+    "slug": "tap-6",
+    "link_embed": "https://embed11.streamc.xyz/embed.php?hash=b902fd3cff24c686ae960a12eee71d89"
+  }
+],
         },
-      ],
-    },
-  ],
-  view: 0,
-  is_shown: true,
+    ],
+    view: 0,
+    is_shown: true,
 };
 
 // 🚀 Hàm insert
 async function insertMovie() {
-  try {
-    const exist = await Movie.findOne({ slug: movieData.slug });
+    try {
+        const exist = await Movie.findOne({ slug: movieData.slug });
 
-    if (exist) {
-      console.log("❌ Phim đã tồn tại");
-      return;
+        if (exist) {
+            console.log("❌ Phim đã tồn tại");
+            return;
+        }
+
+        const movie = new Movie(movieData);
+        await movie.save();
+
+        console.log("✅ Thêm phim thành công");
+    } catch (err) {
+        console.error(err);
+    } finally {
+        mongoose.disconnect();
     }
-
-    const movie = new Movie(movieData);
-    await movie.save();
-
-    console.log("✅ Thêm phim thành công");
-  } catch (err) {
-    console.error(err);
-  } finally {
-    mongoose.disconnect();
-  }
 }
 
 insertMovie();
