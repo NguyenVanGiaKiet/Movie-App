@@ -118,21 +118,21 @@ export default function Navbar() {
   // Navbar background: solid dark when menu open, else scroll-based
   const navStyle = mobileOpen
     ? {
-        background: 'rgba(10,10,15,0.72)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        boxShadow: '0 4px 32px rgba(0,0,0,0.5)',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        transition: 'background 0.2s ease',
-      }
+      background: 'rgba(10,10,15,0.72)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+      boxShadow: '0 4px 32px rgba(0,0,0,0.5)',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      transition: 'background 0.2s ease',
+    }
     : {
-        background: scrolled ? 'rgba(10,10,15,0.72)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-        boxShadow: scrolled ? '0 4px 32px rgba(0,0,0,0.5)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
-        transition: 'background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease',
-      };
+      background: scrolled ? 'rgba(10,10,15,0.72)' : 'transparent',
+      backdropFilter: scrolled ? 'blur(16px)' : 'none',
+      WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+      boxShadow: scrolled ? '0 4px 32px rgba(0,0,0,0.5)' : 'none',
+      borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
+      transition: 'background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease',
+    };
 
   return (
     <>
@@ -142,7 +142,50 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
-              <Film className="w-10 h-10 text-brand-red" />
+              <div id="ghost-wrapper">
+                <div id="ghost-nav">
+                  <div id="red-nav">
+                    <div id="pupil-nav"></div>
+                    <div id="pupil1-nav"></div>
+                    <div id="eye-nav"></div>
+                    <div id="eye1-nav"></div>
+
+                    <div id="top0-nav"></div>
+                    <div id="top1-nav"></div>
+                    <div id="top2-nav"></div>
+                    <div id="top3-nav"></div>
+                    <div id="top4-nav"></div>
+
+                    <div id="st0-nav"></div>
+                    <div id="st1-nav"></div>
+                    <div id="st2-nav"></div>
+                    <div id="st3-nav"></div>
+                    <div id="st4-nav"></div>
+                    <div id="st5-nav"></div>
+
+                    <div id="an1-nav"></div>
+                    <div id="an2-nav"></div>
+                    <div id="an3-nav"></div>
+                    <div id="an4-nav"></div>
+                    <div id="an5-nav"></div>
+                    <div id="an6-nav"></div>
+                    <div id="an7-nav"></div>
+                    <div id="an8-nav"></div>
+                    <div id="an9-nav"></div>
+                    <div id="an10-nav"></div>
+                    <div id="an11-nav"></div>
+                    <div id="an12-nav"></div>
+                    <div id="an13-nav"></div>
+                    <div id="an14-nav"></div>
+                    <div id="an15-nav"></div>
+                    <div id="an16-nav"></div>
+                    <div id="an17-nav"></div>
+                    <div id="an18-nav"></div>
+                  </div>
+
+                  <div id="shadow-nav"></div>
+                </div>
+              </div>
               <div className="flex flex-col">
                 <span className="nav-logo-text font-display text-xl tracking-widest text-white group-hover:text-brand-red transition-colors">
                   HOPPHIM
@@ -155,9 +198,8 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link key={link.href} href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    pathname === link.href ? 'text-brand-red' : 'text-gray-300 hover:text-white'
-                  }`}>
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${pathname === link.href ? 'text-brand-red' : 'text-gray-300 hover:text-white'
+                    }`}>
                   {link.label}
                 </Link>
               ))}
@@ -191,8 +233,8 @@ export default function Navbar() {
                     <div className="py-2">
                       {suggestions.map((movie, i) => {
                         const thumb = movie.thumb_url || movie.poster_url || '';
-                        const year  = extractYear(movie);
-                        const cats  = Array.isArray(movie.category) ? movie.category.slice(0, 2).map(c => c?.name || c).join(', ') : '';
+                        const year = extractYear(movie);
+                        const cats = Array.isArray(movie.category) ? movie.category.slice(0, 2).map(c => c?.name || c).join(', ') : '';
                         return (
                           <button key={movie.slug || i} onClick={() => handleSuggestionClick(movie.slug)}
                             className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left">
@@ -319,7 +361,7 @@ export default function Navbar() {
               <div style={{ marginTop: 8, borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(10,10,15,0.72)', backdropFilter: 'blur(16px)' }}>
                 {suggestions.map((movie, i) => {
                   const thumb = movie.thumb_url || movie.poster_url || '';
-                  const year  = extractYear(movie);
+                  const year = extractYear(movie);
                   return (
                     <button key={movie.slug || i} onClick={() => handleSuggestionClick(movie.slug)}
                       style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
