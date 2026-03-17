@@ -1,14 +1,18 @@
 import { movies } from '@/lib/api';
 
 export default async function sitemap() {
-  const baseUrl = 'https://hopphim.vercel.app';
+  const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hopphim.vercel.app';
 
-  // Lấy danh sách phim từ API
   try {
-    const response = await movies.getMovies();
-    const movieList = response.data.data || [];
+    // Lấy danh sách phim từ API với timeout
+    const response = await Promise.race([
+      movies.getMovies(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('API timeout')), 5000))
+    ]);
+    
+    const movieList = response?.data?.data || [];
 
-    const movieUrls = movieList.map((movie) => ({
+    const movieUrls = movieList.slice(0, 100).map((movie) => ({
       url: `${baseUrl}/movie/${movie.slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -46,6 +50,56 @@ export default async function sitemap() {
         changeFrequency: 'weekly',
         priority: 0.6,
       },
+      // Thêm các trang loại phim
+      {
+        url: `${baseUrl}/movies/type/phim-le`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/movies/type/phim-bo`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/movies/type/hoat-hinh`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/movies/type/tv-shows`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      // Thêm các trang direct
+      {
+        url: `${baseUrl}/phim-le`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/phim-bo`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/hoat-hinh`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/tv-shows`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
       ...movieUrls,
     ];
   } catch (error) {
@@ -64,6 +118,50 @@ export default async function sitemap() {
         lastModified: new Date(),
         changeFrequency: 'daily',
         priority: 0.7,
+      },
+      // Thêm các trang loại phim cơ bản
+      {
+        url: `${baseUrl}/movies/type/phim-le`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/movies/type/phim-bo`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/movies/type/hoat-hinh`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      // Thêm các trang direct
+      {
+        url: `${baseUrl}/phim-le`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/phim-bo`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/hoat-hinh`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
+      },
+      {
+        url: `${baseUrl}/tv-shows`,
+        lastModified: new Date(),
+        changeFrequency: 'daily',
+        priority: 0.8,
       },
     ];
   }

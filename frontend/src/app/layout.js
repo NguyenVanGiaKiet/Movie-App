@@ -11,7 +11,7 @@ export const metadata = {
   openGraph: {
     title: 'HopPhim – Phim hay cả hộp',
     description: 'Khám phá hàng ngàn bộ phim hay, phim bộ, phim lẻ chất lượng cao. Xem phim online miễn phí với chất lượng HD.',
-    url: 'https://hopphim.vercel.app/',
+    url: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hopphim.vercel.app/',
     siteName: 'HopPhim',
     images: [
       {

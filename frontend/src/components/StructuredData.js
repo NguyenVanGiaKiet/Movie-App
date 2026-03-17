@@ -23,7 +23,7 @@ export default function StructuredData({ movie, type = 'Movie' }) {
     name: movie.name,
     alternateName: movie.origin_name,
     description: movie.content?.replace(/<[^>]*>/g, '').trim() || `Xem ${movie.name} online`,
-    url: `https://your-domain.com/movie/${movie.slug}`,
+    url: `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hopphim.vercel.app'}/movie/${movie.slug}`,
     image: movie.poster_url || movie.thumb_url,
     datePublished: movie.year ? `${movie.year}-01-01` : undefined,
     genre: categories,

@@ -4,7 +4,12 @@ export async function generateMetadata({ params }) {
   const { slug } = params;
   
   try {
-    const res = await movieAPI.getMovieBySlug(slug);
+    // Thêm timeout để tránh treo khi backend chưa chạy
+    const res = await Promise.race([
+      movieAPI.getMovieBySlug(slug),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('API timeout')), 3000))
+    ]);
+    
     const movie = res?.data?.movie || res?.data?.film || res?.data;
     
     if (!movie) {
@@ -28,7 +33,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title,
         description,
-        url: `https://hopphim.vercel.app/movie/${slug}`,
+        url: process.env.NODE_ENV === 'development' ? `http://localhost:3000/movie/${slug}` : `https://hopphim.vercel.app/movie/${slug}`,
         siteName: 'HopPhim',
         images: [
           {
@@ -65,9 +70,31 @@ export async function generateMetadata({ params }) {
     };
   } catch (error) {
     console.error('Error generating metadata:', error);
+    
+    // Return basic metadata if API fails
     return {
-      title: 'Phim - HopPhim',
-      description: 'Xem phim online miễn phí tại HopPhim',
+      title: `Xem phim online - HopPhim`,
+      description: 'Xem phim online miễn phí chất lượng cao tại HopPhim',
+      keywords: 'phim online, xem phim, phim hay, phim hd',
+      openGraph: {
+        title: 'Xem phim online - HopPhim',
+        description: 'Xem phim online miễn phí chất lượng cao tại HopPhim',
+        url: process.env.NODE_ENV === 'development' ? `http://localhost:3000/movie/${slug}` : `https://hopphim.vercel.app/movie/${slug}`,
+        siteName: 'HopPhim',
+        images: ['/og-image.jpg'],
+        locale: 'vi_VN',
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'Xem phim online - HopPhim',
+        description: 'Xem phim online miễn phí chất lượng cao tại HopPhim',
+        images: ['/og-image.jpg'],
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
     };
   }
 }
