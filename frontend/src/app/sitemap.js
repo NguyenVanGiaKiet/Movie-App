@@ -6,15 +6,19 @@ export default async function sitemap() {
 
   try {
     // Direct API call bypass interceptor
+    const apiUrl = process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:5000/api/films/phim-moi-cap-nhat'
+      : 'https://movie-app-5eq7.onrender.com/api/films/phim-moi-cap-nhat';
+      
     const response = await Promise.race([
-      axios.get('http://localhost:5000/api/films/phim-moi-cap-nhat'),
+      axios.get(apiUrl),
       new Promise((_, reject) => setTimeout(() => reject(new Error('API timeout')), 5000))
     ]);
     
     // Debug: log response structure
     console.log('API Response:', JSON.stringify(response.data, null, 2).substring(0, 500));
     
-    const movieList = response?.data?.data?.items || response?.data?.items || response?.data?.data || response?.items || [];
+    const movieList = response?.data?.items || response?.data?.data?.items || response?.data?.items || response?.data || [];
     console.log('Movie list length:', movieList.length);
 
     // Thêm nhiều URLs phim hơn
