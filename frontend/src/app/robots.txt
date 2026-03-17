@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://hopphim.vercel.app/sitemap.xml
+
+# Disallow specific routes if needed
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /movie/
+Allow: /search
+Allow: /movies/type/
+
+# Crawl delay (optional)
+Crawl-delay: 1

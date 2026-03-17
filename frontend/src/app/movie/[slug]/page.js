@@ -9,6 +9,9 @@ import { useAuth } from '@/context/AuthContext';
 import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Comments from '@/components/Comments';
+import StructuredData from '@/components/StructuredData';
+import { generateMetadata } from './metadata';
+export { generateMetadata };
 
 function toArray(val) {
   if (!val) return [];
@@ -172,6 +175,8 @@ export default function MovieDetailPage() {
 
   return (
     <div className="min-h-screen page-enter">
+      {/* Structured Data for SEO */}
+      <StructuredData movie={movie} type="Movie" />
 
       {/* ── Hero backdrop ─────────────────────────────────────── */}
       <div className="detail-hero relative h-[55vh] overflow-hidden">
