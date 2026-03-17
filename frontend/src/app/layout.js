@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata = {
   title: 'HopPhim – Phim hay cả hộp',
@@ -76,6 +77,7 @@ export default function RootLayout({ children }) {
             }}
           />
         </AuthProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );
