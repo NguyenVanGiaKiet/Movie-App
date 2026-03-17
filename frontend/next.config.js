@@ -13,11 +13,6 @@ const nextConfig = {
       { protocol: 'http',  hostname: '**' },
     ],
   },
-  // Enable static generation for better SEO
-  output: 'export',
-  trailingSlash: true,
-  // Skip build-time generation for dynamic routes
-  generateStaticParams: false,
   // Enable compression
   compress: true,
   // Add security headers

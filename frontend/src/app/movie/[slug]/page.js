@@ -10,8 +10,6 @@ import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X, Tag 
 import toast from 'react-hot-toast';
 import Comments from '@/components/Comments';
 import StructuredData from '@/components/StructuredData';
-import { generateMetadata } from './metadata';
-export { generateMetadata };
 
 function toArray(val) {
   if (!val) return [];
