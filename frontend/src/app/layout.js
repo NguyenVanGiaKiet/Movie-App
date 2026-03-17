@@ -9,6 +9,9 @@ export const metadata = {
   description: 'Khám phá hàng ngàn bộ phim hay, phim bộ, phim lẻ chất lượng cao. Xem phim online miễn phí với chất lượng HD.',
   keywords: 'phim online, xem phim, phim hay, phim mới, phim bộ, phim lẻ, phim hd, xem phim miễn phí',
   authors: [{ name: 'HopPhim' }],
+  verification: {
+    google: 'xqmpJ9LHdg2xENneWqpbV2PS9Zv0KGwEjB6hz79hexs',
+  },
   openGraph: {
     title: 'HopPhim – Phim hay cả hộp',
     description: 'Khám phá hàng ngàn bộ phim hay, phim bộ, phim lẻ chất lượng cao. Xem phim online miễn phí với chất lượng HD.',
@@ -44,9 +47,6 @@ export const metadata = {
   },
   verification: {
     google: 'xqmpJ9LHdg2xENneWqpbV2PS9Zv0KGwEjB6hz79hexs',
-  },
-  other: {
-    'google-site-verification': 'xqmpJ9LHdg2xENneWqpbV2PS9Zv0KGwEjB6hz79hexs',
   },
 };
 
