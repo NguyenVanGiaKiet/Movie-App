@@ -1,18 +1,24 @@
 import { movies } from '@/lib/api';
+import axios from 'axios';
 
 export default async function sitemap() {
   const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://hopphim.vercel.app';
 
   try {
-    // Lấy danh sách phim từ API với timeout
+    // Direct API call bypass interceptor
     const response = await Promise.race([
-      movies.getMovies(),
+      axios.get('http://localhost:5000/api/films/phim-moi-cap-nhat'),
       new Promise((_, reject) => setTimeout(() => reject(new Error('API timeout')), 5000))
     ]);
     
-    const movieList = response?.data?.data || [];
+    // Debug: log response structure
+    console.log('API Response:', JSON.stringify(response.data, null, 2).substring(0, 500));
+    
+    const movieList = response?.data?.data?.items || response?.data?.items || response?.data?.data || response?.items || [];
+    console.log('Movie list length:', movieList.length);
 
-    const movieUrls = movieList.slice(0, 100).map((movie) => ({
+    // Thêm nhiều URLs phim hơn
+    const movieUrls = movieList.slice(0, 500).map((movie) => ({
       url: `${baseUrl}/movie/${movie.slug}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -100,7 +106,7 @@ export default async function sitemap() {
         changeFrequency: 'daily',
         priority: 0.8,
       },
-      ...movieUrls,
+      ...movieUrls, // Thêm 500 URLs phim
     ];
   } catch (error) {
     console.error('Error generating sitemap:', error);
@@ -136,9 +142,8 @@ export default async function sitemap() {
         url: `${baseUrl}/movies/type/hoat-hinh`,
         lastModified: new Date(),
         changeFrequency: 'daily',
-        priority: 0.8,
+        priority:  0.8,
       },
-      // Thêm các trang direct
       {
         url: `${baseUrl}/phim-le`,
         lastModified: new Date(),
