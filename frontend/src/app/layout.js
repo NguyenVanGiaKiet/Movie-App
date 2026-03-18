@@ -61,6 +61,8 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">
             {children}
           </main>
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9123438903601975"
+     crossorigin="anonymous"></script>
           <footer className="bg-dark-surface border-t border-dark-border py-10 mt-20">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <p className="font-display text-3xl text-brand-red tracking-widest mb-3">HopPhim</p>
