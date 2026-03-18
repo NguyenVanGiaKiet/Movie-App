@@ -1353,7 +1353,7 @@ footer .text-sm { font-family: var(--font-body); letter-spacing: .02em; }
 }
 
 .loading-screen{
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: #0f0f0f;
   display: flex;
