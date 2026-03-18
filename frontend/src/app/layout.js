@@ -3,7 +3,6 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
-import Script from 'next/script';
 
 export const metadata = {
   title: 'HopPhim – Phim hay cả hộp',
@@ -55,7 +54,12 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <script src="https://pl28937470.effectivegatecpm.com/74/ba/d6/74bad67b1a369483d4befb1fdf89da48.js"></script>
+        {/* ✅ AdSense script chuẩn */}
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9123438903601975"
+    crossOrigin="anonymous"
+  ></script>
       </head>
       <body className="min-h-screen bg-[#181820] text-white debug-bg" style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}>
         <AuthProvider>
@@ -63,13 +67,6 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">
             {children}
           </main>
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9123438903601975"
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-          />
-          
           <footer className="bg-dark-surface border-t border-dark-border py-10 mt-20">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <p className="font-display text-3xl text-brand-red tracking-widest mb-3">HopPhim</p>
