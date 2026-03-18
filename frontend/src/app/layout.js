@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import Script from "next/script";
 
 export const metadata = {
   title: 'HopPhim – Phim hay cả hộp',
@@ -63,6 +64,10 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">
             {children}
           </main>
+          <Script
+            src="https://pl28937470.effectivegatecpm.com/74/ba/d6/74bad67b1a369483d4befb1fdf89da48.js"
+            strategy="afterInteractive"
+          />
           <footer className="bg-dark-surface border-t border-dark-border py-10 mt-20">
             <div className="max-w-7xl mx-auto px-4 text-center">
               <p className="font-display text-3xl text-brand-red tracking-widest mb-3">HopPhim</p>
