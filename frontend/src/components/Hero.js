@@ -30,7 +30,7 @@ export default function Hero({ movies = [] }) {
   const [progress, setProgress] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
 
   // Use ref to always have fresh index in timer callbacks
