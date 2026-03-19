@@ -36,21 +36,31 @@ const Movie = mongoose.model("Movie", movieSchema);
 
 // 📥 DATA (bạn có thể thay bằng file JSON hoặc API)
 const movieData = {
-    name: "Arcane: Liên Minh Huyền Thoại (Phần 2)",
-    origin_name: "Arcane: League of Legends (season 2)",
-    slug: "arcane-lien-minh-huyen-thoai-phan-2",
-    content: "Các liên minh hình thành, lòng trung thành vụn vỡ và mối nguy hiểm mới xuất hiện khi trận chiến giữa Piltover và Zaun mang đến cả vinh quang lẫn đau thương.",
-    type: "tv-show",
-    status: "completed",
-    thumb_url: "https://image.tmdb.org/t/p/original/oTGEwkp1mPgWNMgVSM53TWfzgSc.jpg",
-    poster_url: "https://image.tmdb.org/t/p/original/27yH7q4nYadsbF7wMUt5xQG2tYN.jpg",
-    trailer_url: "https://www.youtube.com/embed/ysqiEC6bLUI",
-    time: "40 phút/tập",
-    episode_current: "Hoàn tất (9/9)",
-    episode_total: "9",
-    quality: "HD",
-    lang: "Vietsub",
-    year: 2024,
+    "name": "Mộ Đom Đóm",
+    "origin_name": "火垂るの墓/Grave of the Fireflies",
+    "slug": "mo-dom-dom",
+    "content": "Bộ phim được đặt trong bối cảnh giai đoạn cuối chiến tranh thế giới thứ 2 ở Nhật, kể về câu chuyện cảm động về tình anh em của hai đứa trẻ mồ côi là Seita và Setsuko. Hai anh em mất mẹ trong một trận bom dữ dội của không quân Mỹ khi cha của chúng đang chiến đấu cho Hải quân Nhật. Hai đứa bé phải vật lộn giữa nạn đói, giữa sự thờ ơ của những người xung quanh (trong đó có cả người cô họ của mình)...",
+    "type": "phim-le",
+    "status": "completed",
+    "thumb_url": "https://image.tmdb.org/t/p/original/dz17PRgG2ERqpuuE1xbMw2rIYaJ.jpg",
+    "poster_url": "https://image.tmdb.org/t/p/original/aHaqZpOL7UyVu0nKqp3SMz0o2E1.jpg",
+    "trailer_url": "https://www.youtube.com/embed/HgDzVFMi238",
+    "time": "89 phút",
+    "episode_current": "Full",
+    "episode_total": "1",
+    "quality": "HD",
+    "lang": "Vietsub",
+    "year": 1988,
+    "director": [
+      "Isao Takahata"
+    ],
+    "actor": [
+      "Tsutomu Tatsumi",
+      "Ayano Shiraishi",
+      "Yoshiko Shinohara",
+      "Akemi Yamaguchi",
+      "Cyril McLaglen"
+    ],
     category: [
         "69b26ebd233f020096e6d70c",
         "69b26ebd233f020096e6d70d",
@@ -61,56 +71,14 @@ const movieData = {
         "69b26ebd233f020096e6d718",
         "69b26ebd233f020096e6d71e"
     ],
-    director: ["Pascal Charrue","Arnaud Delord"],
-    actor: ["Hailee Steinfeld", "Kevin Alejandro", "Jason Spisak"],
     episodes: [
         {
             server_name: "Server Vietsub",
             server_data: [
   {
-    "name": "Tập 1",
-    "slug": "tap-1",
-    "link_embed": "https://embed12.streamc.xyz/embed.php?hash=12850906d46de144a8f37e0961528388"
-  },
-  {
-    "name": "Tập 2",
-    "slug": "tap-2",
-    "link_embed": "https://embed11.streamc.xyz/embed.php?hash=ef92ba3c319352b44c7d8467067d40be"
-  },
-  {
-    "name": "Tập 3",
-    "slug": "tap-3",
-    "link_embed": "https://embed11.streamc.xyz/embed.php?hash=1594db360361adedbc7e53dc31a1a11e"
-  },
-  {
-    "name": "Tập 4",
-    "slug": "tap-4",
-    "link_embed": "https://embed15.streamc.xyz/embed.php?hash=837a633b4e13c9a8630df609f25f7a0c"
-  },
-  {
-    "name": "Tập 5",
-    "slug": "tap-5",
-    "link_embed": "https://embed17.streamc.xyz/embed.php?hash=e4a5cd8b52f8564da8727a4d54cd376c"
-  },
-  {
-    "name": "Tập 6",
-    "slug": "tap-6",
-    "link_embed": "https://embed14.streamc.xyz/embed.php?hash=79536b30cc9858cb4466562a363cea51"
-  },
-  {
-    "name": "Tập 7",
-    "slug": "tap-7",
-    "link_embed": "https://embed14.streamc.xyz/embed.php?hash=6e36df188ae4d39b89c3c61cec199f3c"
-  },
-  {
-    "name": "Tập 8",
-    "slug": "tap-8",
-    "link_embed": "https://embed17.streamc.xyz/embed.php?hash=e9bbe768667e54ae6b8f4c0a1bc04f0b"
-  },
-  {
-    "name": "Tập 9",
-    "slug": "tap-9",
-    "link_embed": "https://embed14.streamc.xyz/embed.php?hash=e541651f45b7206c7b35c89852a277be"
+    "name": "Full",
+    "slug": "full",
+    "link_embed": "https://embed.streamc.xyz/embed.php?hash=40b8a4663475da43d8f66c571a618f54"
   }
 ],
         },

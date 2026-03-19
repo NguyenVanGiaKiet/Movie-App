@@ -7,7 +7,7 @@ const POP = [
   { path: 'category', select: 'name slug' },
   { path: 'country',  select: 'name slug' },
 ];
-const SELECT_LIST = 'name origin_name slug thumb_url poster_url year quality lang episode_current type status view';
+const SELECT_LIST = 'name origin_name slug name_url thumb_url poster_url trailer_url year quality lang episode_current type status view';
 
 // ── Helpers ──────────────────────────────────────────────────────
 async function getPage(query, page, limit) {

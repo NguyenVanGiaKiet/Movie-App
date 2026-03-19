@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Info, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Play, Info, ChevronLeft, ChevronRight, Heart, Volume2, VolumeX } from 'lucide-react';
+import TrailerPlayer from './TrailerPlayer';
 
-const INTERVAL = 7000;
+const INTERVAL = 30000;
 
 // Hook detect màn hình
 function useIsMobile() {
@@ -20,14 +21,17 @@ function useIsMobile() {
 }
 
 export default function Hero({ movies = [] }) {
-  const featured  = movies.slice(0, 6);
+  const featured  = movies.slice(0, 10);
   const isMobile  = useIsMobile();
   const total    = featured.length;
 
-  const [current,  setCurrent]  = useState(0);
+  const [current, setCurrent]  = useState(0);
   const [prev,     setPrev]     = useState(null);
   const [progress, setProgress] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   // Use ref to always have fresh index in timer callbacks
   const currentRef   = useRef(0);
@@ -44,7 +48,26 @@ export default function Hero({ movies = [] }) {
     currentRef.current = idx;
     setCurrent(idx);
     setProgress(0);
+    setShowTrailer(false); // Reset trailer when switching
+    // Keep isMuted state when switching movies (don't reset to true)
     setTimeout(() => { transitingRef.current = false; }, 700);
+  };
+
+  const handleTrailerEnd = () => {
+    // Auto advance to next movie when trailer ends
+    goTo((currentRef.current + 1) % total);
+  };
+
+  const toggleTrailer = () => {
+    setShowTrailer(!showTrailer);
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+  };
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
   };
 
   const startTimer = () => {
@@ -125,6 +148,16 @@ export default function Hero({ movies = [] }) {
   const cats = (movie.category || []).slice(0, 3);
   const desc = (movie.content || movie.description || '').replace(/<[^>]*>/g, '').trim();
 
+  // Auto start trailer after 1 second on first load
+  useEffect(() => {
+    if (movie?.trailer_url && !showTrailer) {
+      const timer = setTimeout(() => {
+        setShowTrailer(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [current, movie?.trailer_url]);
+
   return (
     <div
       className="hero-root"
@@ -154,36 +187,69 @@ export default function Hero({ movies = [] }) {
 
       {/* ── Current bg (fading in) ── */}
       <div key={`curr-${current}`} className="hero-bg-curr" style={{ zIndex: 2 }}>
-        {bg && (
-          <Image
-            src={bg}
-            alt={movie.name || ''}
-            fill
-            className="object-cover"
-            style={{ objectFit: 'cover' }}
-            priority
-            unoptimized
+        {showTrailer && movie.trailer_url ? (
+          <TrailerPlayer 
+            trailerUrl={movie.trailer_url} 
+            isActive={showTrailer}
+            onEnded={handleTrailerEnd}
+            isMuted={isMuted}
+            setIsMuted={setIsMuted}
           />
+        ) : (
+          <>
+            {bg && (
+              <Image
+                src={bg}
+                alt={movie.name || ''}
+                fill
+                className="object-cover"
+                style={{ objectFit: 'cover' }}
+                priority
+                unoptimized
+              />
+            )}
+            <div className="hero-abs hero-grad-r" />
+            <div className="hero-abs hero-grad-l" />
+            <div className="hero-abs hero-grad-b" />
+            <div className="hero-abs hero-grad-t" />
+            <div className="hero-abs hero-grid-overlay" />
+          </>
         )}
-        <div className="hero-abs hero-grad-r" />
-        <div className="hero-abs hero-grad-l" />
-        <div className="hero-abs hero-grad-b" />
-        <div className="hero-abs hero-grad-t" />
-        <div className="hero-abs hero-grid-overlay" />
       </div>
 
       {/* ── Content ── */}
       <div className="hero-abs" style={{ zIndex: 10, display: 'flex', alignItems: 'flex-end', paddingBottom: '7rem' }}>
         <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', padding: '0 2rem' }}>
-          <div className="hero-content-in" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
+          <div className="hero-content-in hero-content-center" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
 
+            {movie.name_url ? (
+            <div className="hero-name-image-container">
+              <Image
+                src={movie.name_url}
+                alt={movie.name || ''}
+                width={400}
+                height={200}
+                className="object-contain"
+                style={{ 
+                  objectFit: 'contain',
+                  width: 'auto',
+                  height: 'auto',
+                  maxWidth: '400px',
+                  maxHeight: '200px'
+                }}
+                priority
+                unoptimized
+              />
+            </div>
+          ) : (
             <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
+          )}
 
             {movie.origin_name && (
               <p className="hero-origin">{movie.origin_name}</p>
             )}
 
-            <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
+            <div className="hero-info-container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
               {movie.year            && <span className="hero-pill">{movie.year}</span>}
               {movie.quality         && <span className="hero-qlty">{movie.quality}</span>}
               {movie.lang            && <span className="hero-pill">{movie.lang}</span>}
@@ -194,13 +260,26 @@ export default function Hero({ movies = [] }) {
 
             {desc && <p className="hero-desc">{desc}</p>}
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 24 }}>
-              <Link href={`/movie/${movie.slug}`} className="hero-cta-play">
-                <Play style={{ width: 18, height: 18, fill: 'white' }} /> Xem ngay
+            <div className="hero-buttons-container" style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 24 }}>
+              <Link href={`/movie/${movie.slug}`} className="hero-cta-play hero-play-btn">
+                <Play style={{ width: 18, height: 18, fill: 'white' }} /> <span className="btn-text">Xem ngay</span>
               </Link>
-              <Link href={`/movie/${movie.slug}`} className="hero-cta-info">
-                <Info style={{ width: 16, height: 16 }} /> Chi tiết
-              </Link>
+              <button 
+                onClick={toggleLike}
+                className="hero-cta-info hero-like-btn"
+                style={{ background: isLiked ? '#E50914' : 'rgba(255,255,255,0.1)' }}
+              >
+                <Heart style={{ width: 16, height: 16, fill: isLiked ? 'white' : 'none' }} /> <span className="btn-text">{isLiked ? 'Đã thích' : 'Thích'}</span>
+              </button>
+              {movie.trailer_url && showTrailer && (
+                <button 
+                  onClick={toggleMute}
+                  className="hero-cta-info hero-volume-btn"
+                  style={{ background: 'rgba(255,255,255,0.1)' }}
+                >
+                  {isMuted ? <Volume2 style={{ width: 16, height: 16 }} /> : <VolumeX style={{ width: 16, height: 16 }} />} <span className="btn-text">{isMuted ? 'Mở tiếng' : 'Tắt tiếng'}</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

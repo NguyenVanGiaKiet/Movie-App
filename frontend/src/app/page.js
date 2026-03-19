@@ -28,7 +28,7 @@ export default function HomePage() {
     const fetchAll = async () => {
 
       const [newRes, leRes, boRes, animRes] = await Promise.allSettled([
-        movieAPI.getMovies(1),
+        movieAPI.getMovies(1), // Default 24 items
         movieAPI.getByDanhSach('phim-le', 1),
         movieAPI.getByDanhSach('phim-bo', 1),
         movieAPI.getByTheLoai('hoat-hinh', 1),
@@ -102,7 +102,7 @@ export default function HomePage() {
   return (
     <div className="page-enter">
 
-      <Hero movies={newMovies.slice(0, 5)} />
+      <Hero movies={newMovies.slice(0, 10)} />
 
       <div className="pt-8">
         <TopRankRow title="Phim Mới" movies={newMovies} loading={loading} />

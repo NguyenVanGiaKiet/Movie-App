@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Underground",
+    "origin_name": "Underground",
+    "slug": "underground",
+    "content": "<p>Một câu chuyện tình yêu của tầng lớp lao động lấy bối cảnh trong và xung quanh Tàu điện ngầm Luân Đôn những năm 1920. Hai người đàn ông - Bill dịu dàng và Bert cục cằn - gặp gỡ và bị thu hút bởi cùng một người phụ nữ vào cùng một ngày tại cùng một ga tàu điện ngầm. Nhưng người phụ nữ đã chọn Bill, và Bert không phải là người dễ bị từ chối...</p>",
+    "type": "phim-le",
+    "status": "completed",
+    "thumb_url": "https://phim.nguonc.com/public/images/Film/underground-thumb.jpg",
+    "poster_url": "https://phim.nguonc.com/public/images/Film/underground-poster.jpg",
+    "trailer_url": "https://www.youtube.com",
+    "time": "84 phút",
+    "episode_current": "FULL",
+    "episode_total": 1,
+    "quality": "HD",
+    "lang": "Vietsub",
+    "year": 2026,
+    "director": [
+      "Anthony Asquith"
+    ],
+    "actor": [
+      "Brian Aherne",
+      "Elissa Landi",
+      "Cyril McLaglen"
+    ]
+  }
+]
