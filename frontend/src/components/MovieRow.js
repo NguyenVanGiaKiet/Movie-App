@@ -1,129 +1,194 @@
 'use client';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import MovieCard, { MovieCardSkeleton } from './MovieCard';
+const RANK_COLORS = [
+  '#DC2626', // 1 - đậm nhất (vàng cam đậm)
+  '#EA580C', // 2
+  '#F97316', // 3
+  '#EAB308', // 4
+  '#84CC16', // 5
+  '#22C55E', // 6
+  '#14B8A6', // 7
+  '#0EA5E9', // 8
+  '#6366F1', // 9
+  '#9333EA', // 10
+];
 
-export default function MovieRow({ title, movies = [], loading = false, error = null }) {
-  const rowRef     = useRef(null);
-  const [canLeft,  setCanLeft]  = useState(false);
-  const [canRight, setCanRight] = useState(false);
-  const isDragging = useRef(false);
-  const startX     = useRef(0);
-  const scrollBase = useRef(0);
+export default function NewMovieRow({ title, movies = [], loading = false, linkHref = '#' }) {
+  const router = useRouter();
+  const items    = movies.slice(0, 10);
+  const trackRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [canL, setCanL] = useState(false);
+  const [canR, setCanR] = useState(true);
+  const isDrag  = useRef(false);
+  const dragX   = useRef(0);
+  const scrollB = useRef(0);
   const [dragging, setDragging] = useState(false);
+  const [dragDistance, setDragDistance] = useState(0);
 
   const updateArrows = useCallback(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanLeft(scrollLeft > 2);
-    setCanRight(scrollLeft < scrollWidth - clientWidth - 2);
+    const el = trackRef.current; if (!el) return;
+    setCanL(el.scrollLeft > 4);
+    setCanR(Math.ceil(el.scrollLeft) < el.scrollWidth - el.clientWidth - 4);
   }, []);
 
-  // Reset scroll + check arrows after content loads
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el || loading) return;
-    // Wait for DOM to paint
-    const raf = requestAnimationFrame(() => {
-      el.scrollLeft = 0;
-      requestAnimationFrame(() => updateArrows());
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [loading, movies.length, updateArrows]);
-
-  // Watch for resize (e.g. window resize changes clientWidth)
-  useEffect(() => {
-    const el = rowRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => updateArrows());
-    ro.observe(el);
-    return () => ro.disconnect();
+  // Handle scroll events to disable clicks
+  const handleScroll = useCallback(() => {
+    setIsScrolling(true);
+    updateArrows();
+    
+    // Clear previous timeout
+    if (window.scrollTimeout) {
+      clearTimeout(window.scrollTimeout);
+    }
+    
+    // Re-enable clicks after scroll ends
+    window.scrollTimeout = setTimeout(() => {
+      setIsScrolling(false);
+    }, 150);
   }, [updateArrows]);
 
-  const scroll = (dir) => {
-    const el = rowRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.8;
-    el.scrollBy({ left: dir === 'left' ? -amount : amount, behavior: 'smooth' });
-    // Poll a few times after scroll to catch exact end
-    [100, 200, 350, 500].forEach(ms => setTimeout(updateArrows, ms));
+  useEffect(() => {
+    const el = trackRef.current; if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    const ro = new ResizeObserver(updateArrows); ro.observe(el);
+    return () => { 
+      el.removeEventListener('scroll', handleScroll); 
+      ro.disconnect(); 
+    };
+  }, [updateArrows, handleScroll]);
+
+  useEffect(() => {
+    const el = trackRef.current; if (!el) return;
+    const r = requestAnimationFrame(() => { el.scrollLeft = 0; requestAnimationFrame(updateArrows); });
+    return () => cancelAnimationFrame(r);
+  }, [loading, items.length, updateArrows]);
+
+  const doScroll = (dir) => {
+    const el = trackRef.current; if (!el) return;
+    el.scrollBy({ left: dir === 'l' ? -500 : 500, behavior: 'smooth' });
+    [150, 350, 550].forEach(ms => setTimeout(updateArrows, ms));
   };
 
-  /* ── Drag / mouse ── */
-  const onMouseDown = (e) => {
-    if (e.button !== 0) return;
-    isDragging.current = true;
-    startX.current     = e.pageX;
-    scrollBase.current = rowRef.current.scrollLeft;
-    setDragging(true);
-    e.preventDefault();
+  const onMD = (e) => { 
+    if (e.button !== 0) return; 
+    isDrag.current = true; 
+    dragX.current = e.pageX; 
+    scrollB.current = trackRef.current.scrollLeft; 
+    setDragging(true); 
+    setDragDistance(0);
+    e.preventDefault(); 
   };
-  const onMouseMove = (e) => {
-    if (!isDragging.current) return;
-    rowRef.current.scrollLeft = scrollBase.current - (e.pageX - startX.current);
-    updateArrows();
+  const onMM = (e) => { 
+    if (!isDrag.current) return; 
+    const currentX = e.pageX;
+    const distance = Math.abs(currentX - dragX.current);
+    setDragDistance(distance);
+    trackRef.current.scrollLeft = scrollB.current - (currentX - dragX.current); 
   };
-  const onMouseUp = () => { isDragging.current = false; setDragging(false); };
+  const onMU = () => { 
+    isDrag.current = false; 
+    setDragging(false); 
+    setTimeout(() => setDragDistance(0), 100);
+  };
 
-  /* ── Touch ── */
-  const onTouchStart = (e) => {
-    startX.current     = e.touches[0].pageX;
-    scrollBase.current = rowRef.current.scrollLeft;
-  };
-  const onTouchMove = (e) => {
-    rowRef.current.scrollLeft = scrollBase.current - (e.touches[0].pageX - startX.current);
-    updateArrows();
+  const handleItemClick = (e, slug) => {
+    // Only navigate if not dragging and not scrolling
+    if (dragDistance < 5 && !isScrolling) {
+      router.push(`/movie/${slug}`);
+    }
   };
 
   return (
     <section className="mr-root">
       <div className="mr-header">
-        <h2 className="mr-title">
-          <span className="mr-title-bar" />
-          {title}
-        </h2>
-        <div className="mr-nav">
-          <button
-            onClick={() => scroll('left')}
-            disabled={!canLeft}
-            className="mr-nav-btn"
-            aria-label="Cuộn trái"
-          >
-            <ChevronLeft style={{ width: 16, height: 16 }} />
-          </button>
-          <button
-            onClick={() => scroll('right')}
-            disabled={!canRight}
-            className="mr-nav-btn"
-            aria-label="Cuộn phải"
-          >
-            <ChevronRight style={{ width: 16, height: 16 }} />
-          </button>
+        <h2 className="mr-title"><span className="mr-title-bar"/>{title}</h2>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{display:'flex',gap:5}} className="mr-nav-container">
+            <button className="mr-nav-btn mr-nav-btn" onClick={()=>doScroll('l')} disabled={!canL}><ChevronLeft style={{width:15,height:15}}/></button>
+            <button className="mr-nav-btn mr-nav-btn" onClick={()=>doScroll('r')} disabled={!canR}><ChevronRight style={{width:15,height:15}}/></button>
+          </div>
         </div>
       </div>
 
       <div className="mr-scroll-wrap">
-        {canLeft  && <div className="mr-fade-left"  />}
-        {canRight && <div className="mr-fade-right" />}
+        {canL && <div className="mr-fade-l"/>}
+        {canR && <div className="mr-fade-r"/>}
         <div
-          ref={rowRef}
+          ref={trackRef}
           className="mr-track"
-          style={{ cursor: dragging ? 'grabbing' : 'grab', userSelect: 'none' }}
-          onScroll={updateArrows}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
+          style={{cursor: dragging?'grabbing':'grab', userSelect:'none'}}
+          onMouseDown={onMD} onMouseMove={onMM} onMouseUp={onMU} onMouseLeave={onMU}
         >
           {loading
-            ? Array.from({ length: 8 }).map((_, i) => <MovieCardSkeleton key={i} />)
-            : error
-            ? <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 14, padding: '16px 0' }}>Không thể tải phim.</p>
-            : movies.map((m, i) => <MovieCard key={m.slug || i} movie={m} priority={i < 4} />)
+            ? Array.from({length:8}).map((_,i)=>(
+                <div key={i} className="mr-item">
+                  <div className="mr-poster skeleton"/>
+                  <div style={{padding:'10px 2px 0'}}>
+                    <div className="skeleton" style={{height:32,width:28,borderRadius:3,marginBottom:8}}/>
+                    <div className="skeleton" style={{height:13,width:'90%',borderRadius:3,marginBottom:5}}/>
+                    <div className="skeleton" style={{height:10,width:'65%',borderRadius:3}}/>
+                  </div>
+                </div>
+              ))
+            : items.map((m,i)=>{
+                const thumb = m.thumb_url || m.poster_url || '';
+                const color = RANK_COLORS[i] || '#555';
+                const ep    = m.episode_current || '';
+                return (
+                  <div key={m.slug||i} className="mr-item" onClick={(e) => handleItemClick(e, m.slug)} style={{'--rank-color': color}}>
+                        {/* ── Poster ── */}
+                        <div className="mr-poster group">
+
+                            {thumb
+                                ? <Image
+                                    src={thumb}
+                                    alt={m.name || ''}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                    className="mr-img"
+                                    unoptimized
+                                />
+                                : <div className="mr-fallback" />
+                            }
+
+                            {/* Hover overlay */}
+                            <div className="mr-hover-ov">
+                                <div className="mr-play-btn">
+                                    <Play style={{ width: 22, height: 22, fill: 'white', color: 'white', marginLeft: 3 }} />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    {/* ── Info below ── */}
+                    <div className="mr-info">
+                      {/* Big rank number */}
+                      <div className="mr-rank" style={{
+                        WebkitTextStroke: `2px ${color}`,
+                        WebkitTextFillColor: 'transparent',
+                        color,
+                      }}>{i+1}</div>
+
+                      {/* Movie details in horizontal row */}
+                      <div className="mr-details">
+                        <p className="mr-name">{m.name}</p>
+
+                        {m.origin_name && (
+                          <p className="mr-origin">{m.origin_name}</p>
+                        )}
+
+                        
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
           }
         </div>
       </div>

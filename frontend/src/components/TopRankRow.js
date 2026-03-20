@@ -9,6 +9,7 @@ export default function TopRankRow({ title, movies = [], loading = false, linkHr
   const router = useRouter();
   const items    = movies.slice(0, 10);
   const trackRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   const [canL, setCanL] = useState(false);
   const [canR, setCanR] = useState(true);
   const isDrag   = useRef(false);

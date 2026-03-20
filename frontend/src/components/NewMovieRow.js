@@ -22,6 +22,7 @@ export default function NewMovieRow({ title, movies = [], loading = false, linkH
   const router = useRouter();
   const items    = movies.slice(0, 10);
   const trackRef = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   const [canL, setCanL] = useState(false);
   const [canR, setCanR] = useState(true);
   const isDrag  = useRef(false);
@@ -36,12 +37,31 @@ export default function NewMovieRow({ title, movies = [], loading = false, linkH
     setCanR(Math.ceil(el.scrollLeft) < el.scrollWidth - el.clientWidth - 4);
   }, []);
 
+  // Handle scroll events to disable clicks
+  const handleScroll = useCallback(() => {
+    setIsScrolling(true);
+    updateArrows();
+    
+    // Clear previous timeout
+    if (window.scrollTimeout) {
+      clearTimeout(window.scrollTimeout);
+    }
+    
+    // Re-enable clicks after scroll ends
+    window.scrollTimeout = setTimeout(() => {
+      setIsScrolling(false);
+    }, 150);
+  }, [updateArrows]);
+
   useEffect(() => {
     const el = trackRef.current; if (!el) return;
-    el.addEventListener('scroll', updateArrows, { passive: true });
+    el.addEventListener('scroll', handleScroll, { passive: true });
     const ro = new ResizeObserver(updateArrows); ro.observe(el);
-    return () => { el.removeEventListener('scroll', updateArrows); ro.disconnect(); };
-  }, [updateArrows]);
+    return () => { 
+      el.removeEventListener('scroll', handleScroll); 
+      ro.disconnect(); 
+    };
+  }, [updateArrows, handleScroll]);
 
   useEffect(() => {
     const el = trackRef.current; if (!el) return;
@@ -78,8 +98,8 @@ export default function NewMovieRow({ title, movies = [], loading = false, linkH
   };
 
   const handleItemClick = (e, slug) => {
-    // Only navigate if not dragging
-    if (dragDistance < 5) {
+    // Only navigate if not dragging and not scrolling
+    if (dragDistance < 5 && !isScrolling) {
       router.push(`/movie/${slug}`);
     }
   };
@@ -89,9 +109,9 @@ export default function NewMovieRow({ title, movies = [], loading = false, linkH
       <div className="nmr-header">
         <h2 className="mr-title"><span className="mr-title-bar"/>{title}</h2>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <div style={{display:'flex',gap:5}}>
-            <button className="mr-nav-btn" onClick={()=>doScroll('l')} disabled={!canL}><ChevronLeft style={{width:15,height:15}}/></button>
-            <button className="mr-nav-btn" onClick={()=>doScroll('r')} disabled={!canR}><ChevronRight style={{width:15,height:15}}/></button>
+          <div style={{display:'flex',gap:5}} className="nmr-nav-container">
+            <button className="mr-nav-btn nmr-nav-btn" onClick={()=>doScroll('l')} disabled={!canL}><ChevronLeft style={{width:15,height:15}}/></button>
+            <button className="mr-nav-btn nmr-nav-btn" onClick={()=>doScroll('r')} disabled={!canR}><ChevronRight style={{width:15,height:15}}/></button>
           </div>
         </div>
       </div>

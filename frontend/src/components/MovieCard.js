@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function MovieCard({ movie, className = '', priority = false }) {
+export default function MovieCard({ movie, className = '', priority = false, disabled = false }) {
   const [imgErr, setImgErr] = useState(false);
 
   if (!movie) return null;
@@ -15,7 +15,20 @@ export default function MovieCard({ movie, className = '', priority = false }) {
   const thumb  = !imgErr ? (movie.thumb_url || movie.poster_url || '') : '';
 
   return (
-    <Link href={`/movie/${slug}`} className={`mc-root ${className}`}>
+    <Link 
+      href={`/movie/${slug}`} 
+      className={`mc-root ${className}`}
+      style={{ 
+        pointerEvents: disabled ? 'none' : 'auto',
+        cursor: disabled ? 'default' : 'pointer'
+      }}
+      onClick={(e) => {
+        if (disabled) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+    >
       <div className="mc-card">
         <div className="mc-poster">
           {thumb ? (

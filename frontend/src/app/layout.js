@@ -54,12 +54,6 @@ export default function RootLayout({ children }) {
       <head>    
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* ✅ AdSense script chuẩn */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9123438903601975"
-          crossOrigin="anonymous"
-        ></script>
       </head>
       <body className="min-h-screen bg-[#181820] text-white debug-bg" style={{ fontFamily: "'Be Vietnam Pro', sans-serif" }}>
         <AuthProvider>

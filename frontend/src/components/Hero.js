@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Info, ChevronLeft, ChevronRight, Heart, Volume2, VolumeX } from 'lucide-react';
+import { Play, ChevronLeft, ChevronRight, Heart, Volume2, VolumeX } from 'lucide-react';
 import TrailerPlayer from './TrailerPlayer';
 
 const INTERVAL = 30000;
+const MUTE_KEY  = 'hero_muted'; // persist mute across navigation
 
-// Hook detect màn hình
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -21,103 +21,153 @@ function useIsMobile() {
 }
 
 export default function Hero({ movies = [] }) {
-  const featured  = movies.slice(0, 10);
-  const isMobile  = useIsMobile();
+  const featured = movies.slice(0, 20);
+  const isMobile = useIsMobile();
   const total    = featured.length;
 
-  const [current, setCurrent]  = useState(0);
-  const [prev,     setPrev]     = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [dragging, setDragging] = useState(false);
+  const [current,     setCurrent]     = useState(0);
+  const [prev,        setPrev]        = useState(null);
+  const [progress,    setProgress]    = useState(0);
+  const [dragging,    setDragging]    = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isVisible,   setIsVisible]   = useState(true);  // hero in viewport
+  const [isTabActive,  setIsTabActive]  = useState(true);  // tab is active
+  const [isLiked,     setIsLiked]     = useState(false);
 
-  // Use ref to always have fresh index in timer callbacks
-  const currentRef   = useRef(0);
+  // Persist mute state across page navigation, default = true (muted on first load)
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    // Check if this is a page refresh (not navigation)
+    const navigationEntries = performance.getEntriesByType('navigation');
+    const isRefresh = navigationEntries.length > 0 && navigationEntries[0].type === 'reload';
+    
+    if (isRefresh || !sessionStorage.getItem('session_start')) {
+      // Fresh load or refresh - always start muted
+      sessionStorage.setItem('session_start', 'true');
+      sessionStorage.setItem(MUTE_KEY, 'true');
+      return true;
+    }
+    
+    // Navigation within the site - restore saved state
+    const saved = sessionStorage.getItem(MUTE_KEY);
+    return saved === null ? true : saved === 'true';
+  });
+
+  const rootRef       = useRef(null);
+  const currentRef    = useRef(0);
+  const prevRef       = useRef(0);
   const transitingRef = useRef(false);
-  const timerRef     = useRef(null);
-  const progRef      = useRef(null);
-  const dragStart    = useRef(null);
+  const timerRef      = useRef(null);
+  const progRef       = useRef(null);
+  const dragStart     = useRef(null);
 
-  const goTo = (idx) => {
-    if (idx === currentRef.current) return;
-    // Allow even if transitioning (timer wins over animation)
-    transitingRef.current = true;
-    setPrev(currentRef.current);
-    currentRef.current = idx;
-    setCurrent(idx);
-    setProgress(0);
-    setShowTrailer(false); // Reset trailer when switching
-    // Keep isMuted state when switching movies (don't reset to true)
-    setTimeout(() => { transitingRef.current = false; }, 700);
-  };
+  // Persist mute state
+  useEffect(() => {
+    sessionStorage.setItem(MUTE_KEY, String(isMuted));
+  }, [isMuted]);
 
-  const handleTrailerEnd = () => {
-    // Auto advance to next movie when trailer ends
-    goTo((currentRef.current + 1) % total);
-  };
-
-  const toggleTrailer = () => {
-    setShowTrailer(!showTrailer);
-  };
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-  };
-
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
-  };
-
+  // ── Timer (restarts on current, visibility, or tab focus change) ──
   const startTimer = () => {
     clearInterval(progRef.current);
     clearTimeout(timerRef.current);
-
     if (total <= 1) return;
-
     const startTime = Date.now();
     setProgress(0);
-
     progRef.current = setInterval(() => {
-      const pct = Math.min(((Date.now() - startTime) / INTERVAL) * 100, 100);
-      setProgress(pct);
+      setProgress(Math.min(((Date.now() - startTime) / INTERVAL) * 100, 100));
     }, 50);
-
     timerRef.current = setTimeout(() => {
-      // Always use ref for fresh value
-      const next = (currentRef.current + 1) % total;
-      goTo(next);
+      goTo((currentRef.current + 1) % total);
     }, INTERVAL);
   };
 
-  // Start timer when current changes
-  useEffect(() => {
-    startTimer();
-    return () => {
-      clearInterval(progRef.current);
-      clearTimeout(timerRef.current);
-    };
-  }, [current, total]); // eslint-disable-line
+  const stopTimer = () => {
+    clearInterval(progRef.current);
+    clearTimeout(timerRef.current);
+    setProgress(0);
+  };
 
-  // Remove prev after animation
+  const goTo = (idx) => {
+    if (idx === currentRef.current) return;
+    transitingRef.current = true;
+    setPrev(currentRef.current);
+    prevRef.current    = currentRef.current;
+    currentRef.current = idx;
+    setCurrent(idx);
+    setProgress(0);
+    setShowTrailer(false);
+    setTimeout(() => { transitingRef.current = false; }, 700);
+  };
+
+  // Start/stop timer based on viewport visibility (keep trailer playing when switching tabs)
+  useEffect(() => {
+    if (isVisible) {
+      startTimer();
+    } else {
+      stopTimer();
+      // Stop trailer only when hero is scrolled out of viewport
+      setShowTrailer(false);
+    }
+    return () => { clearInterval(progRef.current); clearTimeout(timerRef.current); };
+  }, [current, total, isVisible]); // eslint-disable-line
+
+  // ── Page Visibility API: track tab visibility ──
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      setIsTabActive(!document.hidden);
+      if (!document.hidden) {
+        // Tab became visible again, restart timer if hero is in viewport
+        if (isVisible) {
+          startTimer();
+        }
+      } else {
+        // Tab became hidden, just stop timer, keep trailer playing
+        stopTimer();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, [isVisible]); // eslint-disable-line
+
+  // ── IntersectionObserver: track viewport visibility ──
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.2 }  // 20% visible = active
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-restart trailer when hero becomes visible again
+  useEffect(() => {
+    if (!isVisible) return;
+    if (featured[current]?.trailer_url) {
+      const t = setTimeout(() => setShowTrailer(true), 800);
+      return () => clearTimeout(t);
+    }
+  }, [isVisible, current]); // eslint-disable-line
+
+  // Cleanup prev slide bg
   useEffect(() => {
     if (prev === null) return;
     const t = setTimeout(() => setPrev(null), 750);
     return () => clearTimeout(t);
   }, [current]);
 
-  // Keyboard
+  // Keyboard nav
   useEffect(() => {
     const fn = (e) => {
-      if (e.key === 'ArrowLeft')  { goTo((currentRef.current - 1 + total) % total); }
-      if (e.key === 'ArrowRight') { goTo((currentRef.current + 1) % total); }
+      if (e.key === 'ArrowLeft')  goTo((currentRef.current - 1 + total) % total);
+      if (e.key === 'ArrowRight') goTo((currentRef.current + 1) % total);
     };
     window.addEventListener('keydown', fn);
     return () => window.removeEventListener('keydown', fn);
   }, [total]);
 
-  // Drag / swipe
+  // Drag/swipe
   const onDragStart = (e) => {
     dragStart.current = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
     setDragging(true);
@@ -135,31 +185,28 @@ export default function Hero({ movies = [] }) {
     dragStart.current = null;
   };
 
+  const toggleMute = () => setIsMuted(v => !v);
+  const toggleLike = () => setIsLiked(v => !v);
+
   if (!total) return <div className="hero-root skeleton" />;
 
   const movie     = featured[current];
   const prevMovie = prev !== null ? featured[prev] : null;
   if (!movie) return null;
 
-  // Mobile dùng thumb (landscape) fits better; desktop dùng poster (portrait)
-  const bg = isMobile
-    ? (movie.thumb_url  || movie.poster_url || '')
-    : (movie.poster_url || movie.thumb_url  || '');
-  const cats = (movie.category || []).slice(0, 3);
+  const bg   = isMobile ? (movie.thumb_url || movie.poster_url || '') : (movie.poster_url || movie.thumb_url || '');
   const desc = (movie.content || movie.description || '').replace(/<[^>]*>/g, '').trim();
 
-  // Auto start trailer after 1 second on first load
-  useEffect(() => {
-    if (movie?.trailer_url && !showTrailer) {
-      const timer = setTimeout(() => {
-        setShowTrailer(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [current, movie?.trailer_url]);
+  // Create slots for thumbnail navigation (5 visible, centered on current)
+  const slots = [];
+  for (let i = -2; i <= 2; i++) {
+    const idx = (current + i + total) % total;
+    slots.push({ idx, offset: i });
+  }
 
   return (
     <div
+      ref={rootRef}
       className="hero-root"
       style={{ cursor: dragging ? 'grabbing' : 'grab' }}
       onMouseDown={onDragStart}
@@ -168,16 +215,12 @@ export default function Hero({ movies = [] }) {
       onTouchStart={onDragStart}
       onTouchEnd={onDragEnd}
     >
-      {/* ── Prev bg (fading out) ── */}
+      {/* Prev bg */}
       {prevMovie && (
         <div key={`prev-${prev}`} style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
           <Image
             src={isMobile ? (prevMovie.thumb_url || prevMovie.poster_url || '') : (prevMovie.poster_url || prevMovie.thumb_url || '')}
-            alt="" fill
-            className="object-cover"
-            style={{ objectFit: 'cover' }}
-            priority
-            unoptimized
+            alt="" fill className="object-cover" style={{ objectFit: 'cover' }} priority unoptimized
           />
           <div className="hero-abs hero-grad-r" />
           <div className="hero-abs hero-grad-l" />
@@ -185,28 +228,22 @@ export default function Hero({ movies = [] }) {
         </div>
       )}
 
-      {/* ── Current bg (fading in) ── */}
+      {/* Current bg */}
       <div key={`curr-${current}`} className="hero-bg-curr" style={{ zIndex: 2 }}>
-        {showTrailer && movie.trailer_url ? (
-          <TrailerPlayer 
-            trailerUrl={movie.trailer_url} 
-            isActive={showTrailer}
-            onEnded={handleTrailerEnd}
+        {showTrailer && movie.trailer_url && isVisible ? (
+          <TrailerPlayer
+            trailerUrl={movie.trailer_url}
+            isActive={showTrailer && isVisible}
+            shouldPlay={isVisible} // Only stop when scrolled out of viewport
+            onEnded={() => goTo((currentRef.current + 1) % total)}
             isMuted={isMuted}
             setIsMuted={setIsMuted}
           />
         ) : (
           <>
             {bg && (
-              <Image
-                src={bg}
-                alt={movie.name || ''}
-                fill
-                className="object-cover"
-                style={{ objectFit: 'cover' }}
-                priority
-                unoptimized
-              />
+              <Image src={bg} alt={movie.name || ''} fill className="object-cover"
+                style={{ objectFit: 'cover' }} priority unoptimized />
             )}
             <div className="hero-abs hero-grad-r" />
             <div className="hero-abs hero-grad-l" />
@@ -217,37 +254,23 @@ export default function Hero({ movies = [] }) {
         )}
       </div>
 
-      {/* ── Content ── */}
+      {/* Content */}
       <div className="hero-abs" style={{ zIndex: 10, display: 'flex', alignItems: 'flex-end', paddingBottom: '7rem' }}>
         <div style={{ width: '100%', maxWidth: '80rem', margin: '0 auto', padding: '0 2rem' }}>
           <div className="hero-content-in hero-content-center" key={`info-${current}`} style={{ maxWidth: '44rem' }}>
 
             {movie.name_url ? (
-            <div className="hero-name-image-container">
-              <Image
-                src={movie.name_url}
-                alt={movie.name || ''}
-                width={400}
-                height={200}
-                className="object-contain"
-                style={{ 
-                  objectFit: 'contain',
-                  width: 'auto',
-                  height: 'auto',
-                  maxWidth: '400px',
-                  maxHeight: '200px'
-                }}
-                priority
-                unoptimized
-              />
-            </div>
-          ) : (
-            <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
-          )}
-
-            {movie.origin_name && (
-              <p className="hero-origin">{movie.origin_name}</p>
+              <div className="hero-name-image-container">
+                <Image src={movie.name_url} alt={movie.name || ''} width={400} height={200}
+                  className="object-contain"
+                  style={{ objectFit: 'contain', width: 'auto', height: 'auto', maxWidth: '400px', maxHeight: '200px' }}
+                  priority unoptimized />
+              </div>
+            ) : (
+              <h1 className="hero-title">{(movie.name || '').toUpperCase()}</h1>
             )}
+
+            {movie.origin_name && <p className="hero-origin">{movie.origin_name}</p>}
 
             <div className="hero-info-container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
               {movie.year            && <span className="hero-pill">{movie.year}</span>}
@@ -255,7 +278,6 @@ export default function Hero({ movies = [] }) {
               {movie.lang            && <span className="hero-pill">{movie.lang}</span>}
               {movie.episode_current && <span className="hero-pill">{movie.episode_current}</span>}
               {movie.time            && <span className="hero-pill">{movie.time}</span>}
-
             </div>
 
             {desc && <p className="hero-desc">{desc}</p>}
@@ -264,20 +286,18 @@ export default function Hero({ movies = [] }) {
               <Link href={`/movie/${movie.slug}`} className="hero-cta-play hero-play-btn">
                 <Play style={{ width: 18, height: 18, fill: 'white' }} /> <span className="btn-text">Xem ngay</span>
               </Link>
-              <button 
-                onClick={toggleLike}
-                className="hero-cta-info hero-like-btn"
-                style={{ background: isLiked ? '#E50914' : 'rgba(255,255,255,0.1)' }}
-              >
-                <Heart style={{ width: 16, height: 16, fill: isLiked ? 'white' : 'none' }} /> <span className="btn-text">{isLiked ? 'Đã thích' : 'Thích'}</span>
+              <button onClick={toggleLike} className="hero-cta-info hero-like-btn"
+                style={{ background: isLiked ? '#E50914' : 'rgba(255,255,255,0.1)' }}>
+                <Heart style={{ width: 16, height: 16, fill: isLiked ? 'white' : 'none' }} />
+                <span className="btn-text">{isLiked ? 'Đã thích' : 'Thích'}</span>
               </button>
-              {movie.trailer_url && showTrailer && (
-                <button 
-                  onClick={toggleMute}
-                  className="hero-cta-info hero-volume-btn"
-                  style={{ background: 'rgba(255,255,255,0.1)' }}
-                >
-                  {isMuted ? <Volume2 style={{ width: 16, height: 16 }} /> : <VolumeX style={{ width: 16, height: 16 }} />} <span className="btn-text">{isMuted ? 'Mở tiếng' : 'Tắt tiếng'}</span>
+              {movie.trailer_url && (
+                <button onClick={toggleMute} className="hero-cta-info hero-volume-btn"
+                  style={{ background: 'rgba(255,255,255,0.1)' }}>
+                  {isMuted
+                    ? <Volume2 style={{ width: 16, height: 16 }} />
+                    : <VolumeX style={{ width: 16, height: 16 }} />}
+                  <span className="btn-text">{isMuted ? 'Mở tiếng' : 'Tắt tiếng'}</span>
                 </button>
               )}
             </div>
@@ -285,74 +305,63 @@ export default function Hero({ movies = [] }) {
         </div>
       </div>
 
-      {/* ── Thumbnail strip (desktop) ── */}
+      {/* ── Thumbnail strip (desktop): 5 visible, active always centred, infinite ── */}
       {total > 1 && (
         <div className="hero-strip">
-          <div className="hero-nav-col">
-            <button
-              onClick={() => goTo((currentRef.current - 1 + total) % total)}
-              className="hero-nav-btn"
-            >
-              <ChevronLeft style={{ width: 16, height: 16 }} />
-            </button>
-            <button
-              onClick={() => goTo((currentRef.current + 1) % total)}
-              className="hero-nav-btn"
-            >
-              <ChevronRight style={{ width: 16, height: 16 }} />
-            </button>
-          </div>
-
-          <div className="hero-thumbs">
-            {featured.map((m, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`hero-thumb${i === current ? ' active' : ''}`}
-              >
-                <div className="hero-thumb-img">
-                  {(m.thumb_url || m.poster_url) && (
-                    <Image
-                      src={m.thumb_url || m.poster_url}
-                      alt={m.name || ''}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      unoptimized
-                    />
-                  )}
-                  {i === current && (
-                    <div className="hero-thumb-bar" style={{ width: `${progress}%` }} />
-                  )}
-                  <div className="hero-thumb-dim" />
-                </div>
-                <p className="hero-thumb-name">{m.name}</p>
-              </button>
-            ))}
+          <div className="hero-thumbs" style={{ overflow: 'hidden', position: 'relative' }}>
+            {/* Stable position-based keys so React never unmounts — transitions handle movement */}
+            <div className="hero-thumbs-inner" style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+              {slots.map(({ idx, offset }, posKey) => {
+                const m        = featured[idx];
+                const isActive = idx === current;
+                const absDist  = Math.abs(offset);
+                const scale    = isActive ? 1 : absDist === 1 ? 0.88 : 0.76;
+                const opacity  = isActive ? 1 : absDist === 1 ? 0.65 : 0.4;
+                return (
+                  <button
+                    key={`pos-${posKey}`}   /* fixed position key — no remount */
+                    onClick={() => goTo(idx)}
+                    className={`hero-thumb${isActive ? ' active' : ''}`}
+                    style={{
+                      transform: `scale(${scale})`,
+                      opacity,
+                      transition: 'transform .45s cubic-bezier(.25,.46,.45,.94), opacity .45s',
+                      transformOrigin: 'bottom center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <div className="hero-thumb-img" style={{ transition: 'border-color .35s' }}>
+                      {(m.thumb_url || m.poster_url) && (
+                        <Image src={m.thumb_url || m.poster_url} alt={m.name || ''}
+                          fill style={{ objectFit: 'cover', transition: 'opacity .3s' }} unoptimized />
+                      )}
+                      {isActive && <div className="hero-thumb-bar" style={{ width: `${progress}%` }} />}
+                      <div className="hero-thumb-dim" />
+                    </div>
+                    <p className="hero-thumb-name">{m.name}</p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
 
-      {/* ── Dots (mobile) ── */}
+      {/* Dots (mobile) */}
       {total > 1 && (
         <div className="hero-dots">
           {featured.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={`hero-dot${i === current ? ' active' : ''}`}
-            />
+            <button key={i} onClick={() => goTo(i)}
+              className={`hero-dot${i === current ? ' active' : ''}`} />
           ))}
         </div>
       )}
-      
-      {/* ── Scroll indicator ── */}
+
+      {/* Scroll indicator */}
       <div className="hero-scroll-hint">
-        <div className="hero-scroll-mouse">
-          <div className="hero-scroll-wheel" />
-        </div>
+        <div className="hero-scroll-mouse"><div className="hero-scroll-wheel" /></div>
         <span className="hero-scroll-text">Cuộn xuống</span>
       </div>
-
     </div>
   );
 }

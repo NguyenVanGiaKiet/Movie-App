@@ -102,7 +102,7 @@ export default function HomePage() {
   return (
     <div className="page-enter">
 
-      <Hero movies={newMovies.slice(0, 10)} />
+      <Hero movies={newMovies.slice(0, 20)} />
 
       <div className="pt-8">
         <TopRankRow title="Phim Mới" movies={newMovies} loading={loading} />
