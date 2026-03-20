@@ -1,6 +1,6 @@
-# 🎬 CineStream – Web App Xem Phim Trực Tuyến
+# 🎬 Movie App – Web App Xem Phim Trực Tuyến
 
-Ứng dụng xem phim hiện đại với giao diện Netflix-style, tích hợp API từ [phim.nguonc.com](https://phim.nguonc.com).
+Ứng dụng xem phim hiện đại với giao diện Netflix-style, tích hợp nhiều tính năng nâng cao và trải nghiệm người dùng tối ưu.
 
 ![Tech Stack](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
 ![Tech Stack](https://img.shields.io/badge/Node.js-Express-green?style=flat-square&logo=node.js)
@@ -8,24 +8,25 @@
 
 ---
 
-## ✨ Tính Năng
+## ✨ Tính Năng Nổi Bật
 
 | Tính năng | Mô tả |
 |-----------|-------|
-| 🏠 Trang chủ | Hiển thị phim mới, phim lẻ, phim bộ, hoạt hình |
-| 🔍 Tìm kiếm | Tìm kiếm phim theo tên |
-| 🎬 Chi tiết phim | Thông tin, diễn viên, đạo diễn, thể loại |
-| ▶️ Xem phim | Trình phát video inline với chọn tập |
-| 🎞️ Trailer | Xem trailer trong modal |
-| 🔐 Xác thực | Đăng ký / Đăng nhập bằng JWT |
-| ❤️ Yêu thích | Thêm/xóa phim yêu thích |
-| 📋 Danh sách | Quản lý danh sách phim đã lưu |
-| 📱 Responsive | Hoạt động tốt trên mọi thiết bị |
-| 🌙 Dark mode | Giao diện tối mặc định |
+| 🏠 **Hero Banner** | 20 phim featured với trailer tự động phát, trailer dừng khi scroll |
+| 🎬 **Trailer Control** | Tắt tiếng mặc định, tự động phát/dừng khi scroll, continue khi chuyển tab |
+| �️ **Movie Rows** | 5 loại rows với cắt góc zigzag, smooth scrolling, click disabled khi scroll |
+| 📱 **Responsive Design** | Mobile-optimized với dots thu gọn, touch-friendly |
+| 🔍 **Tìm kiếm** | Tìm kiếm phim theo tên với real-time suggestions |
+| 📊 **Top Rankings** | Hiển thị top phim với xếp hạng và màu sắc gradient |
+| � **Comments** | Hệ thống bình luận cho từng phim |
+| ❤️ **Yêu thích** | Thêm/xóa phim yêu thích với authentication |
+| 🎭 **Series Banner** | Banner đặc biệt cho phim bộ |
+| 🌙 **Dark Mode** | Giao diện tối mặc định với CSS variables |
+| ⚡ **Performance** | Lazy loading, skeleton states, optimized transitions |
 
 ---
 
-## 🏗️ Kiến Trúc
+## 🏗️ Kiến Trúc Hệ Thống
 
 ```
 movie-app/
@@ -36,16 +37,21 @@ movie-app/
 │   │   ├── controllers/
 │   │   │   ├── authController.js    # Xử lý đăng ký/đăng nhập
 │   │   │   ├── movieController.js   # Proxy API phim
+│   │   │   ├── commentController.js # Quản lý bình luận
 │   │   │   └── favoriteController.js # Quản lý yêu thích
 │   │   ├── middleware/
 │   │   │   └── auth.js         # JWT middleware
 │   │   ├── models/
 │   │   │   ├── User.js         # Schema người dùng
+│   │   │   ├── Comment.js      # Schema bình luận
 │   │   │   └── Favorite.js     # Schema yêu thích
 │   │   ├── routes/
 │   │   │   ├── auth.js         # /api/auth/*
 │   │   │   ├── movies.js       # /api/movies/*
-│   │   │   └── favorites.js    # /api/favorites/*
+│   │   │   ├── films.js        # /api/films/*
+│   │   │   ├── comments.js     # /api/comments/*
+│   │   │   ├── favorites.js    # /api/favorites/*
+│   │   │   └── admin.js        # /api/admin/*
 │   │   └── server.js           # Entry point
 │   ├── .env.example
 │   └── package.json
@@ -54,26 +60,28 @@ movie-app/
     ├── src/
     │   ├── app/
     │   │   ├── layout.js           # Root layout
-    │   │   ├── page.js             # Trang chủ
+    │   │   ├── page.js             # Trang chủ (20 phim featured)
     │   │   ├── search/page.js      # Tìm kiếm
     │   │   ├── movie/[slug]/page.js # Chi tiết phim
     │   │   ├── login/page.js       # Đăng nhập
     │   │   ├── register/page.js    # Đăng ký
-    │   │   ├── favorites/page.js   # Yêu thích
-    │   │   └── movies/type/[type]/page.js
+    │   │   └── favorites/page.js   # Yêu thích
     │   ├── components/
     │   │   ├── Navbar.js           # Thanh điều hướng
-    │   │   ├── Hero.js             # Banner trang chủ
-    │   │   ├── MovieCard.js        # Card phim
-    │   │   └── MovieRow.js         # Hàng phim scroll ngang
-    │   ├── context/
-    │   │   └── AuthContext.js      # Auth state management
+    │   │   ├── Hero.js             # Hero banner với trailer
+    │   │   ├── MovieCard.js        # Card phim với transitions
+    │   │   ├── MovieRow.js         # Row phim với cắt góc
+    │   │   ├── NewMovieRow.js      # Row phim mới (ngược với MR)
+    │   │   ├── TopRankRow.js       # Top phim với ranking
+    │   │   ├── SeriesBanner.js     # Banner phim bộ
+    │   │   ├── TrailerPlayer.js    # YouTube trailer player
+    │   │   ├── Comments.js         # Component bình luận
+    │   │   └── GhostLoading.js     # Loading states
     │   ├── lib/
     │   │   └── api.js              # Axios instances & API calls
     │   └── styles/
-    │       └── globals.css
+    │       └── globals.css         # CSS với transitions & animations
     ├── next.config.js
-    ├── tailwind.config.js
     ├── .env.example
     └── package.json
 ```
@@ -156,7 +164,7 @@ Chỉnh sửa `.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXT_PUBLIC_APP_NAME=CineStream
+NEXT_PUBLIC_APP_NAME=Movie App
 ```
 
 Chạy frontend:
@@ -196,6 +204,22 @@ npm start
 | GET | `/api/movies/category/:slug` | Theo thể loại |
 | GET | `/api/movies/categories` | Danh sách thể loại |
 
+### Films (Additional endpoints)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/films` | Danh sách phim |
+| GET | `/api/films/:id` | Chi tiết phim theo ID |
+
+### Comments (Yêu cầu đăng nhập)
+
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| GET | `/api/comments/movie/:slug` | Lấy bình luận phim |
+| POST | `/api/comments` | Thêm bình luận |
+| PUT | `/api/comments/:id` | Sửa bình luận |
+| DELETE | `/api/comments/:id` | Xóa bình luận |
+
 ### Favorites (Yêu cầu đăng nhập)
 
 | Method | Endpoint | Mô tả |
@@ -207,13 +231,28 @@ npm start
 
 ---
 
-## 🎨 UI/UX
+## 🎨 UI/UX Features
 
-- **Font**: Bebas Neue (display) + DM Sans (body)
-- **Màu chủ đạo**: `#E50914` (đỏ Netflix), `#0A0A0F` (nền tối)
-- **Animations**: Fade-in, slide-up, scale-in, shimmer skeleton
-- **Responsive**: Mobile-first, breakpoints sm/md/lg/xl
-- **Dark mode**: Mặc định dark, CSS variables
+### Hero Banner
+- **20 phim featured** với auto-rotation (30s/phim)
+- **YouTube trailer** với auto-play/pause khi scroll
+- **Mute by default** với state persistence
+- **Smooth transitions** và responsive design
+- **Thumbnail strip** với zigzag cutting
+
+### Movie Rows
+- **5 types**: MovieRow, NewMovieRow, TopRankRow, SeriesBanner
+- **Cắt góc zigzag**: MR ngược với NMR
+- **Smooth scrolling** với click disabled khi scroll
+- **Hover effects** với scale và shadow transitions
+- **Mobile optimized** với dots thu gọn
+
+### Design System
+- **Font**: Custom fonts với fallbacks
+- **Màu chủ đạo**: `#E50914` (đỏ), `#0A0A0F` (nền tối)
+- **Animations**: Smooth transitions, cubic-bezier easing
+- **Responsive**: Mobile-first với breakpoints
+- **Dark mode**: CSS variables cho consistent theming
 
 ---
 
@@ -232,11 +271,11 @@ npm start
 ### Frontend
 - **Next.js 14** – React framework (App Router)
 - **Tailwind CSS** – Utility-first CSS
-- **axios** – HTTP client
+- **Axios** – HTTP client
 - **js-cookie** – Cookie management
-- **react-hot-toast** – Notifications
 - **lucide-react** – Icons
-- **clsx** – Conditional classes
+- **YouTube IFrame API** – Trailer player
+- **Intersection Observer** – Scroll-based interactions
 
 ---
 
@@ -245,7 +284,6 @@ npm start
 ### Backend (Railway / Render / VPS)
 ```bash
 cd backend
-npm run build  # Nếu có
 npm start
 ```
 > Đừng quên set các biến môi trường trên server!
@@ -264,11 +302,34 @@ vercel deploy
 
 ---
 
+## 🎯 Performance Optimizations
+
+- **Lazy Loading** cho images và components
+- **Skeleton States** cho smooth loading experience
+- **Intersection Observer** cho scroll-based interactions
+- **Debounced Search** cho real-time suggestions
+- **Optimized Transitions** với hardware acceleration
+- **Mobile-First** responsive design
+- **Component Splitting** cho better code splitting
+
+---
+
 ## 📝 Lưu Ý
 
-- API phim từ `phim.nguonc.com` có thể thay đổi cấu trúc response. Kiểm tra API docs tại [phim.nguonc.com/api-document](https://phim.nguonc.com/api-document)
+- API phim từ `phim.nguonc.com` có thể thay đổi cấu trúc response
 - Thay đổi `JWT_SECRET` thành chuỗi ngẫu nhiên dài trước khi deploy
 - Đặt `NODE_ENV=production` trong môi trường production
+- YouTube trailer cần API key cho production (nếu cần)
+
+---
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
 ---
 
