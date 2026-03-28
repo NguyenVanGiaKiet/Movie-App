@@ -10,6 +10,8 @@ import { Play, Heart, Calendar, Film, Globe, Clock, ChevronDown, Server, X, Tag 
 import toast from 'react-hot-toast';
 import Comments from '@/components/Comments';
 import StructuredData from '@/components/StructuredData';
+import TMDBInfo from '@/components/TMDBInfo';
+import { detectMediaType } from '@/lib/tmdb';
 
 function toArray(val) {
   if (!val) return [];
@@ -216,6 +218,15 @@ export default function MovieDetailPage() {
               <p className="text-gray-400 text-base sm:text-lg mb-4">{movie.origin_name}</p>
             )}
 
+            {/* TMDB Score */}
+            <TMDBInfo 
+              movieName={movie.origin_name || movie.name} 
+              year={movie.year ? parseInt(movie.year) : null}
+              className="mb-4"
+              showOnlyScore={true}
+              preferredMediaType={detectMediaType(movie)}
+            />
+
             {/* Meta */}
             <div className="flex flex-col gap-2 mb-5 text-sm items-center sm:items-start">
               {/* Row 1: Year · Quality · Lang · Time */}
@@ -283,7 +294,6 @@ export default function MovieDetailPage() {
                 )}
               </div>
             )}
-
             {/* Actions */}
             <div className="detail-actions flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-6">
               {hasVideo && (
@@ -307,19 +317,15 @@ export default function MovieDetailPage() {
               </button>
             </div>
 
-            {/* Cast */}
-            {actors.length > 0 && (
-              <p className="text-sm text-gray-400 mb-1 text-center sm:text-left">
-                <span className="text-gray-500">Diễn viên: </span>
-                {actors.slice(0, 6).map(getName).join(', ')}
-              </p>
-            )}
-            {directors.length > 0 && (
-              <p className="text-sm text-gray-400 text-center sm:text-left">
-                <span className="text-gray-500">Đạo diễn: </span>
-                {directors.map(getName).join(', ')}
-              </p>
-            )}
+            {/* TMDB Casts */}
+            <TMDBInfo 
+              movieName={movie.origin_name || movie.name} 
+              year={movie.year ? parseInt(movie.year) : null}
+              className="mb-6 max-w-2xl mx-auto sm:mx-0"
+              showOnlyCasts={true}
+              preferredMediaType={detectMediaType(movie)}
+            />
+            
           </div>
         </div>
 

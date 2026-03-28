@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Play, ChevronLeft, ChevronRight, Heart, Volume2, VolumeX } from 'lucide-react';
 import TrailerPlayer from './TrailerPlayer';
+import TMDBInfo from './TMDBInfo';
 
 const INTERVAL = 30000;
 const MUTE_KEY  = 'hero_muted'; // persist mute across navigation
@@ -271,6 +272,13 @@ export default function Hero({ movies = [] }) {
             )}
 
             {movie.origin_name && <p className="hero-origin">{movie.origin_name}</p>}
+            {/* TMDB Score */}
+            <TMDBInfo 
+              movieName={movie.origin_name || movie.name} 
+              year={movie.year ? parseInt(movie.year) : null}
+              className="mb-4"
+              showOnlyScore={true}
+            />
 
             <div className="hero-info-container" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
               {movie.year            && <span className="hero-pill">{movie.year}</span>}

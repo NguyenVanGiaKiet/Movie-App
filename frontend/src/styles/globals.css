@@ -1072,6 +1072,55 @@ body {
 .mr-track::-webkit-scrollbar { display: none; }
 
 /* ═══════════════════════════════════════════════════════════════ */
+/* TMDB INFO COMPONENT                                              */
+/* ═══════════════════════════════════════════════════════════════ */
+
+.tmdb-info {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.tmdb-score-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+}
+
+.tmdb-casts-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+}
+
+.tmdb-genres-section {
+  margin-top: 16px;
+}
+
+/* Loading states */
+.tmdb-info-loading .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.tmdb-info-empty {
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .tmdb-info {
+    padding: 16px;
+  }
+  
+  .tmdb-casts-section .flex {
+    gap: 12px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
 /* TYPOGRAPHY SYSTEM                                              */
 /* ═══════════════════════════════════════════════════════════════ */
 .section-heading {
