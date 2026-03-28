@@ -141,7 +141,26 @@ export function testSearchPatterns(movieName) {
 // Helper function để detect media type từ movie data
 export function detectMediaType(movie) {
   // Kiểm tra các dấu hiệu của TV series
-  const isTV = movie.episode_current || movie.episode_total || movie.time?.includes('tập');
+  const hasEpisodes = movie.episode_current && movie.episode_total && 
+    (movie.episode_current !== 'Full' && movie.episode_total !== '1');
+  
+  const hasTimeInTaps = movie.time?.includes('tập');
+  const hasMultipleEpisodes = movie.episode_total && 
+    parseInt(movie.episode_total) > 1;
+  
+  const isTV = hasEpisodes || hasTimeInTaps || hasMultipleEpisodes;
+  
+  console.log('🔍 Media Type Detection:', {
+    movieName: movie.name,
+    episode_current: movie.episode_current,
+    episode_total: movie.episode_total,
+    time: movie.time,
+    hasEpisodes,
+    hasTimeInTaps,
+    hasMultipleEpisodes,
+    isTVSeries: isTV,
+    detectedType: isTV ? 'tv' : 'movie'
+  });
   
   // Mặc định là movie
   return isTV ? 'tv' : 'movie';
@@ -149,19 +168,36 @@ export function detectMediaType(movie) {
 
 // Combined function để lấy TMDB data cho một phim (hỗ trợ cả movie và tv)
 export async function getTMDBDataForMovie(movieName, year = null, preferredMediaType = null) {
+  console.log('🚀 TMDB Search Start:', { movieName, year, preferredMediaType });
+  
   // 1. Tìm kiếm phim với tên gốc
   let searchResult = await searchMovieOnTMDB(movieName, year, preferredMediaType);
+  console.log('📝 Search 1 (original):', !!searchResult?.id ? 'FOUND' : 'NOT FOUND');
   
   // 2. Nếu không tìm thấy, thử với tên tiếng Anh (loại bỏ phần phụ đề)
   if (!searchResult?.id) {
     const englishName = movieName.split(':')[0].split('(')[0].trim();
+    console.log('📝 Search 2 (english):', englishName);
+    console.log('📝 English name length:', englishName.length);
+    console.log('📝 English name chars:', Array.from(englishName));
+    
     searchResult = await searchMovieOnTMDB(englishName, year, preferredMediaType);
+    console.log('📝 Search 2 result:', !!searchResult?.id ? 'FOUND' : 'NOT FOUND');
+    
+    // Thử với tên hardcoded nếu là Howl's Moving Castle
+    if (!searchResult?.id && englishName.includes("Howl")) {
+      console.log('📝 Search 2b (hardcoded): Howl\'s Moving Castle');
+      searchResult = await searchMovieOnTMDB("Howl's Moving Castle", year, preferredMediaType);
+      console.log('📝 Search 2b result:', !!searchResult?.id ? 'FOUND' : 'NOT FOUND');
+    }
   }
   
   // 3. Nếu vẫn không tìm thấy, thử với tên đơn giản hơn
   if (!searchResult?.id) {
     const simpleName = movieName.split(':')[0].trim();
+    console.log('📝 Search 3 (simple):', simpleName);
     searchResult = await searchMovieOnTMDB(simpleName, year, preferredMediaType);
+    console.log('📝 Search 3 result:', !!searchResult?.id ? 'FOUND' : 'NOT FOUND');
   }
   
   // 4. Nếu có số (season 2, part 2, etc), thử tìm base name
@@ -174,18 +210,28 @@ export async function getTMDBDataForMovie(movieName, year = null, preferredMedia
       .trim();
     
     if (baseName !== movieName) {
+      console.log('📝 Search 4 (base name):', baseName);
       searchResult = await searchMovieOnTMDB(baseName, year, preferredMediaType);
+      console.log('📝 Search 4 result:', !!searchResult?.id ? 'FOUND' : 'NOT FOUND');
     }
   }
   
   if (!searchResult?.id) {
+    console.log('❌ All TMDB searches failed');
     return null;
   }
+
+  console.log('✅ TMDB Search Success:', { 
+    id: searchResult.id, 
+    title: searchResult.title || searchResult.name,
+    mediaType: searchResult.media_type
+  });
 
   // 5. Lấy chi tiết đầy đủ với đúng media_type
   const mediaType = searchResult.media_type || preferredMediaType || 'movie';
   const details = await getMovieDetailsFromTMDB(searchResult.id, mediaType);
   if (!details) {
+    console.log('❌ TMDB details failed');
     return null;
   }
 
@@ -203,6 +249,14 @@ export async function getTMDBDataForMovie(movieName, year = null, preferredMedia
     videos: details.videos?.results || [],
     media_type: mediaType // Thêm media_type để debug
   };
+
+  console.log('🎯 TMDB Final Result:', {
+    title: result.title,
+    hasScore: !!result.score?.vote_average,
+    scoreValue: result.score?.vote_average,
+    castCount: result.casts.length,
+    mediaType: result.media_type
+  });
 
   return result;
 }

@@ -1088,16 +1088,14 @@ body {
   padding-bottom: 16px;
 }
 
-.tmdb-score-only {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 @media (max-width: 640px) {
   .tmdb-score-only {
     justify-content: center;
     text-align: center;
+  }
+  
+  .tmdb-score-only .flex {
+    justify-content: center;
   }
 }
 

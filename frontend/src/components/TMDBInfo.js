@@ -18,7 +18,23 @@ export default function TMDBInfo({ movieName, year, className = '', showOnlyScor
       setLoading(true);
       
       try {
+        console.log('🔍 TMDB Debug:', { 
+          movieName, 
+          year, 
+          preferredMediaType,
+          hasMovieName: !!movieName
+        });
+        
         const data = await getTMDBDataForMovie(movieName, year, preferredMediaType);
+        console.log('📊 TMDB Result:', {
+          success: !!data,
+          title: data?.title,
+          hasScore: !!data?.score?.vote_average,
+          scoreValue: data?.score?.vote_average,
+          castCount: data?.casts?.length,
+          mediaType: data?.media_type
+        });
+        
         setTmdbData(data);
       } catch (error) {
         console.error('TMDB fetch error in component:', error);

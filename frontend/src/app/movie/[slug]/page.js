@@ -224,7 +224,18 @@ export default function MovieDetailPage() {
               year={movie.year ? parseInt(movie.year) : null}
               className="mb-4"
               showOnlyScore={true}
-              preferredMediaType={detectMediaType(movie)}
+              preferredMediaType={(() => {
+                const mediaType = detectMediaType(movie);
+                console.log('🎬 Media Type Detection:', {
+                  movieName: movie.name,
+                  originName: movie.origin_name,
+                  episode_current: movie.episode_current,
+                  episode_total: movie.episode_total,
+                  time: movie.time,
+                  detectedType: mediaType
+                });
+                return mediaType;
+              })()}
             />
 
             {/* Meta */}
