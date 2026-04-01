@@ -12,6 +12,9 @@ export const metadata = {
   verification: {
     google: 'xqmpJ9LHdg2xENneWqpbV2PS9Zv0KGwEjB6hz79hexs',
   },
+  googleAdSense: {
+    adClient: 'ca-pub-9123438903601975',
+  },
   openGraph: {
     title: 'HopPhim – Phim hay cả hộp',
     description: 'Khám phá hàng ngàn bộ phim hay, phim bộ, phim lẻ chất lượng cao. Xem phim online miễn phí với chất lượng HD.',
