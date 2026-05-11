@@ -204,53 +204,6 @@ body {
 .hero-bg-prev { position: absolute; inset: 0; z-index: 0; }
 .hero-bg-curr { position: absolute; inset: 0; z-index: 1; animation: heroBgIn 700ms cubic-bezier(.4,0,.2,1) forwards; }
 @keyframes heroBgIn { from { opacity: 0; transform: scale(1.05); } to { opacity: 1; transform: scale(1); } }
-.hero-grad-r { 
-  position: absolute; 
-  inset: 0; 
-  background: linear-gradient(
-    to left,
-  rgba(0,0,0,1) 0%,
-  rgba(0,0,0,0.7) 3%,
-  rgba(0,0,0,0.3) 6%,
-  transparent 10%
-  );
-}
-.hero-grad-l { 
-  position: absolute; 
-  inset: 0; 
-  background: linear-gradient(
-    to right,
-  rgba(0,0,0,1) 0%,
-  rgba(0,0,0,0.7) 3%,
-  rgba(0,0,0,0.3) 6%,
-  transparent 10%
-  );
-}
-.hero-grad-b {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,1) 0%,
-    rgba(0,0,0,0.95) 2%,
-    rgba(0,0,0,0.8) 4%,
-    rgba(0,0,0,0.6) 8%,
-    rgba(0,0,0,0.4) 12%,
-    rgba(0,0,0,0.2) 18%,
-    transparent 25%
-  );
-}
-.hero-grad-t {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,1) 0%,
-  rgba(0,0,0,0.7) 3%,
-  rgba(0,0,0,0.3) 6%,
-  transparent 10%
-  );
-}
 .hero-grid-overlay {
   position: absolute;
   inset: 0;
