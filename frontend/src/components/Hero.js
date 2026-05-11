@@ -3,12 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, ChevronLeft, ChevronRight, Heart, Volume2, VolumeX } from 'lucide-react';
-import TrailerPlayer from './TrailerPlayer';
+import { Play, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import TMDBInfo from './TMDBInfo';
 
-const INTERVAL = 30000;
-const MUTE_KEY  = 'hero_muted'; // persist mute across navigation
+const INTERVAL = 5000;
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -30,29 +28,10 @@ export default function Hero({ movies = [] }) {
   const [prev,        setPrev]        = useState(null);
   const [progress,    setProgress]    = useState(0);
   const [dragging,    setDragging]    = useState(false);
-  const [showTrailer, setShowTrailer] = useState(false);
   const [isVisible,   setIsVisible]   = useState(true);  // hero in viewport
   const [isTabActive,  setIsTabActive]  = useState(true);  // tab is active
   const [isLiked,     setIsLiked]     = useState(false);
 
-  // Persist mute state across page navigation, default = true (muted on first load)
-  const [isMuted, setIsMuted] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    // Check if this is a page refresh (not navigation)
-    const navigationEntries = performance.getEntriesByType('navigation');
-    const isRefresh = navigationEntries.length > 0 && navigationEntries[0].type === 'reload';
-    
-    if (isRefresh || !sessionStorage.getItem('session_start')) {
-      // Fresh load or refresh - always start muted
-      sessionStorage.setItem('session_start', 'true');
-      sessionStorage.setItem(MUTE_KEY, 'true');
-      return true;
-    }
-    
-    // Navigation within the site - restore saved state
-    const saved = sessionStorage.getItem(MUTE_KEY);
-    return saved === null ? true : saved === 'true';
-  });
 
   const rootRef       = useRef(null);
   const currentRef    = useRef(0);
@@ -62,10 +41,6 @@ export default function Hero({ movies = [] }) {
   const progRef       = useRef(null);
   const dragStart     = useRef(null);
 
-  // Persist mute state
-  useEffect(() => {
-    sessionStorage.setItem(MUTE_KEY, String(isMuted));
-  }, [isMuted]);
 
   // ── Timer (restarts on current, visibility, or tab focus change) ──
   const startTimer = () => {
@@ -96,7 +71,6 @@ export default function Hero({ movies = [] }) {
     currentRef.current = idx;
     setCurrent(idx);
     setProgress(0);
-    setShowTrailer(false);
     setTimeout(() => { transitingRef.current = false; }, 700);
   };
 
@@ -106,8 +80,7 @@ export default function Hero({ movies = [] }) {
       startTimer();
     } else {
       stopTimer();
-      // Stop trailer only when hero is scrolled out of viewport
-      setShowTrailer(false);
+      // Stop timer when hero is scrolled out of viewport
     }
     return () => { clearInterval(progRef.current); clearTimeout(timerRef.current); };
   }, [current, total, isVisible]); // eslint-disable-line
@@ -142,14 +115,6 @@ export default function Hero({ movies = [] }) {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-restart trailer when hero becomes visible again
-  useEffect(() => {
-    if (!isVisible) return;
-    if (featured[current]?.trailer_url) {
-      const t = setTimeout(() => setShowTrailer(true), 800);
-      return () => clearTimeout(t);
-    }
-  }, [isVisible, current]); // eslint-disable-line
 
   // Cleanup prev slide bg
   useEffect(() => {
@@ -186,7 +151,6 @@ export default function Hero({ movies = [] }) {
     dragStart.current = null;
   };
 
-  const toggleMute = () => setIsMuted(v => !v);
   const toggleLike = () => setIsLiked(v => !v);
 
   if (!total) return <div className="hero-root skeleton" />;
@@ -231,28 +195,15 @@ export default function Hero({ movies = [] }) {
 
       {/* Current bg */}
       <div key={`curr-${current}`} className="hero-bg-curr" style={{ zIndex: 2 }}>
-        {showTrailer && movie.trailer_url && isVisible ? (
-          <TrailerPlayer
-            trailerUrl={movie.trailer_url}
-            isActive={showTrailer && isVisible}
-            shouldPlay={isVisible} // Only stop when scrolled out of viewport
-            onEnded={() => goTo((currentRef.current + 1) % total)}
-            isMuted={isMuted}
-            setIsMuted={setIsMuted}
-          />
-        ) : (
-          <>
-            {bg && (
-              <Image src={bg} alt={movie.name || ''} fill className="object-cover"
-                style={{ objectFit: 'cover' }} priority unoptimized />
-            )}
-            <div className="hero-abs hero-grad-r" />
-            <div className="hero-abs hero-grad-l" />
-            <div className="hero-abs hero-grad-b" />
-            <div className="hero-abs hero-grad-t" />
-            <div className="hero-abs hero-grid-overlay" />
-          </>
+        {bg && (
+          <Image src={bg} alt={movie.name || ''} fill className="object-cover"
+            style={{ objectFit: 'cover' }} priority unoptimized />
         )}
+        <div className="hero-abs hero-grad-r" />
+        <div className="hero-abs hero-grad-l" />
+        <div className="hero-abs hero-grad-b" />
+        <div className="hero-abs hero-grad-t" />
+        <div className="hero-abs hero-grid-overlay" />
       </div>
 
       {/* Content */}
@@ -299,15 +250,6 @@ export default function Hero({ movies = [] }) {
                 <Heart style={{ width: 16, height: 16, fill: isLiked ? 'white' : 'none' }} />
                 <span className="btn-text">{isLiked ? 'Đã thích' : 'Thích'}</span>
               </button>
-              {movie.trailer_url && (
-                <button onClick={toggleMute} className="hero-cta-info hero-volume-btn"
-                  style={{ background: 'rgba(255,255,255,0.1)' }}>
-                  {isMuted
-                    ? <Volume2 style={{ width: 16, height: 16 }} />
-                    : <VolumeX style={{ width: 16, height: 16 }} />}
-                  <span className="btn-text">{isMuted ? 'Mở tiếng' : 'Tắt tiếng'}</span>
-                </button>
-              )}
             </div>
           </div>
         </div>
