@@ -16,7 +16,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#1a1a1a]">
+      <div className="">
         {/* Social + Region Row */}
         <div className="max-w-[1480px] mx-auto px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Follow Us */}
