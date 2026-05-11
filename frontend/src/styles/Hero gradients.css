@@ -1,0 +1,63 @@
+/* ═══════════════════════════════════════════════════════════════ */
+/* HERO GRADIENTS — điều chỉnh hợp lý                            */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* ── Phải → trái (che cạnh phải) ──
+   Trải rộng 35% thay vì 10%, bớt đen tuyệt đối ở 0% */
+.hero-grad-r {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.72)  0%,
+    rgba(0, 0, 0, 0.45)  8%,
+    rgba(0, 0, 0, 0.18) 20%,
+    transparent         35%
+  );
+}
+
+/* ── Trái → phải (che cạnh trái, nơi có text) ──
+   Đủ đen để chữ đọc được, nhưng fade mượt hơn */
+.hero-grad-l {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.88)  0%,
+    rgba(0, 0, 0, 0.70) 15%,
+    rgba(0, 0, 0, 0.40) 30%,
+    rgba(0, 0, 0, 0.12) 50%,
+    transparent         65%
+  );
+}
+
+/* ── Dưới → trên (quan trọng nhất — che vùng text phía dưới) ──
+   Trải rộng 55%, transition mượt theo đường cong */
+.hero-grad-b {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1.00)  0%,
+    rgba(0, 0, 0, 0.90)  8%,
+    rgba(0, 0, 0, 0.72) 18%,
+    rgba(0, 0, 0, 0.45) 30%,
+    rgba(0, 0, 0, 0.20) 42%,
+    rgba(0, 0, 0, 0.05) 52%,
+    transparent         60%
+  );
+}
+
+/* ── Trên → dưới (che navbar, header) ──
+   Vừa đủ tối cho navbar, fade nhanh xuống dưới */
+.hero-grad-t {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.75)  0%,
+    rgba(0, 0, 0, 0.40)  8%,
+    rgba(0, 0, 0, 0.12) 18%,
+    transparent         28%
+  );
+}

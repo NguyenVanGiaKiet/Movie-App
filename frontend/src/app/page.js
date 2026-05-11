@@ -20,6 +20,12 @@ export default function HomePage() {
   const [phimLe, setPhimLe] = useState([]);
   const [phimBo, setPhimBo] = useState([]);
   const [hoatHinh, setHoatHinh] = useState([]);
+  const [hanhDong, setHanhDong] = useState([]);
+  const [kinhDi, setKinhDi] = useState([]);
+  const [tinhCam, setTinhCam] = useState([]);
+  const [khoaHocVienTuong, setKhoaHocVienTuong] = useState([]);
+  const [lichSu, setLichSu] = useState([]);
+  const [chienTranh, setChienTranh] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -27,17 +33,29 @@ export default function HomePage() {
 
     const fetchAll = async () => {
 
-      const [newRes, leRes, boRes, animRes] = await Promise.allSettled([
+      const [newRes, leRes, boRes, animRes, hanhDongRes, kinhDiRes, tinhCamRes, khoaHocRes, lichSuRes, chienTranhRes] = await Promise.allSettled([
         movieAPI.getMovies(1), // Default 24 items
         movieAPI.getByDanhSach('phim-le', 1),
         movieAPI.getByDanhSach('phim-bo', 1),
         movieAPI.getByTheLoai('hoat-hinh', 1),
+        movieAPI.getByTheLoai('hanh-dong', 1),
+        movieAPI.getByTheLoai('kinh-di', 1),
+        movieAPI.getByTheLoai('tinh-cam', 1),
+        movieAPI.getByTheLoai('khoa-hoc-vien-tuong', 1),
+        movieAPI.getByTheLoai('lich-su', 1),
+        movieAPI.getByTheLoai('chien-tranh', 1),
       ]);
 
       setNewMovies(extractItems(newRes));
       setPhimLe(extractItems(leRes));
       setPhimBo(extractItems(boRes));
       setHoatHinh(extractItems(animRes));
+      setHanhDong(extractItems(hanhDongRes));
+      setKinhDi(extractItems(kinhDiRes));
+      setTinhCam(extractItems(tinhCamRes));
+      setKhoaHocVienTuong(extractItems(khoaHocRes));
+      setLichSu(extractItems(lichSuRes));
+      setChienTranh(extractItems(chienTranhRes));
 
       // delay loading 1.5s
       setTimeout(() => {
@@ -109,6 +127,12 @@ export default function HomePage() {
         <NewMovieRow title="Phim Lẻ" movies={phimLe} loading={loading} />
         <SeriesBanner movies={phimBo} loading={loading} />
         <MovieRow title="Hoạt Hình" movies={hoatHinh} loading={loading} />
+        <MovieRow title="Phim Hành Động" movies={hanhDong} loading={loading} />
+        <MovieRow title="Phim Kinh Dị" movies={kinhDi} loading={loading} />
+        <MovieRow title="Phim Tình Cảm" movies={tinhCam} loading={loading} />
+        <MovieRow title="Phim Khoa Học Viễn Tưởng" movies={khoaHocVienTuong} loading={loading} />
+        <MovieRow title="Phim Lịch Sử" movies={lichSu} loading={loading} />
+        <MovieRow title="Phim Chiến Tranh" movies={chienTranh} loading={loading} />
       </div>
 
     </div>

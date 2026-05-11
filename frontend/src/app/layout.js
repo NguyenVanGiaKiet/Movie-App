@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 export const metadata = {
@@ -64,12 +65,7 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">
             {children}
           </main>
-          <footer className="bg-dark-surface border-t border-dark-border py-10 mt-20">
-            <div className="max-w-7xl mx-auto px-4 text-center">
-              <p className="font-display text-3xl text-brand-red tracking-widest mb-3">HopPhim</p>
-              <p className="text-[#606070] text-sm">© 2024 HopPhim. Dữ liệu từ phim.nguonc.com</p>
-            </div>
-          </footer>
+          <Footer />
           <Toaster
             position="top-right"
             toastOptions={{

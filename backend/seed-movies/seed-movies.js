@@ -36,10 +36,10 @@ const Movie = mongoose.model("Movie", movieSchema);
 
 // 📥 DATA (bạn có thể thay bằng file JSON hoặc API)
 const movieData = {
-    "name": "Mộ Đom Đóm",
-    "origin_name": "火垂るの墓/Grave of the Fireflies",
-    "slug": "mo-dom-dom",
-    "content": "Bộ phim được đặt trong bối cảnh giai đoạn cuối chiến tranh thế giới thứ 2 ở Nhật, kể về câu chuyện cảm động về tình anh em của hai đứa trẻ mồ côi là Seita và Setsuko. Hai anh em mất mẹ trong một trận bom dữ dội của không quân Mỹ khi cha của chúng đang chiến đấu cho Hải quân Nhật. Hai đứa bé phải vật lộn giữa nạn đói, giữa sự thờ ơ của những người xung quanh (trong đó có cả người cô họ của mình)...",
+    "name": "Bóng Ma Anh Quốc: Người Bất Tử",
+    "origin_name": "Peaky Blinders: The Immortal Man",
+    "slug": "bong-ma-anh-quoc-nguoi-bat-tu",
+    "content": "Cillian Murphy tái hợp với nhà sáng tạo Steven Knight trong bộ phim điện ảnh hoành tráng này, nơi Tommy Shelby và cậu con trai xa cách phải đối mặt với hỗn loạn của Thế chiến II.",
     "type": "phim-le",
     "status": "completed",
     "thumb_url": "https://image.tmdb.org/t/p/original/dz17PRgG2ERqpuuE1xbMw2rIYaJ.jpg",
